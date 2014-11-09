@@ -48,7 +48,7 @@ public class CustomAdapter extends BaseAdapter{
         View vi = convertView;
         
         if (vi == null)
-            vi = inflater.inflate(R.layout.item, null);
+            vi = inflater.inflate(R.layout.row, null);
         
         TextView name = (TextView) vi.findViewById(R.id.itemName);
         TextView desc = (TextView) vi.findViewById(R.id.itemDesc);

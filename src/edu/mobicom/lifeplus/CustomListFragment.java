@@ -32,7 +32,7 @@ import android.widget.Toast;
  * Activities containing this fragment MUST implement the {@link Callbacks}
  * interface.
  */
-public class ListFragment extends Fragment implements
+public class CustomListFragment extends Fragment implements
 		AbsListView.OnItemClickListener {
 
 	// TODO: Rename parameter arguments, choose names that match
@@ -67,8 +67,8 @@ public class ListFragment extends Fragment implements
 	private ListAdapter mAdapter;
 
 	// TODO: Rename and change types of parameters
-	public static ListFragment newInstance(int sectionNumber, ArrayList<Task> values) {
-		ListFragment fragment = new ListFragment();
+	public static CustomListFragment newInstance(int sectionNumber, ArrayList<Task> values) {
+		CustomListFragment fragment = new CustomListFragment();
 		Bundle args = new Bundle();
 		args.putInt(ARG_SECTION_NUMBER, sectionNumber);
 		args.putSerializable(ARG_VALUES, values);
@@ -80,7 +80,7 @@ public class ListFragment extends Fragment implements
 	 * Mandatory empty constructor for the fragment manager to instantiate the
 	 * fragment (e.g. upon screen orientation changes).
 	 */
-	public ListFragment() {
+	public CustomListFragment() {
 	}
 
 	@SuppressWarnings("unchecked")
@@ -99,7 +99,7 @@ public class ListFragment extends Fragment implements
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.fragment_dailyquest, container,
+		View view = inflater.inflate(R.layout.fragment_custom_list, container,
 				false);
 
 		// Set the adapter

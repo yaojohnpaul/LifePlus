@@ -10,13 +10,13 @@ import android.view.ViewGroup;
 
 /**
  * A simple {@link Fragment} subclass. Activities that contain this fragment
- * must implement the {@link EditItemFragment.OnFragmentInteractionListener}
+ * must implement the {@link EditDailyQuestFragment.OnFragmentInteractionListener}
  * interface to handle interaction events. Use the
- * {@link EditItemFragment#newInstance} factory method to create an instance of
+ * {@link EditDailyQuestFragment#newInstance} factory method to create an instance of
  * this fragment.
  *
  */
-public class EditItemFragment extends Fragment {
+public class EditDailyQuestFragment extends Fragment {
 	// TODO: Rename parameter arguments, choose names that match
 	// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 	private static final String ARG_PARAM1 = "param1";
@@ -39,8 +39,8 @@ public class EditItemFragment extends Fragment {
 	 * @return A new instance of fragment EditItemFragment.
 	 */
 	// TODO: Rename and change types and number of parameters
-	public static EditItemFragment newInstance(String param1, String param2) {
-		EditItemFragment fragment = new EditItemFragment();
+	public static EditDailyQuestFragment newInstance(String param1, String param2) {
+		EditDailyQuestFragment fragment = new EditDailyQuestFragment();
 		Bundle args = new Bundle();
 		args.putString(ARG_PARAM1, param1);
 		args.putString(ARG_PARAM2, param2);
@@ -48,7 +48,7 @@ public class EditItemFragment extends Fragment {
 		return fragment;
 	}
 
-	public EditItemFragment() {
+	public EditDailyQuestFragment() {
 		// Required empty public constructor
 	}
 
@@ -65,7 +65,7 @@ public class EditItemFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
-		return inflater.inflate(R.layout.fragment_edit_item, container, false);
+		return inflater.inflate(R.layout.fragment_edit_daily_quest, container, false);
 	}
 
 	// TODO: Rename method, update argument and hook method into UI event

@@ -1,31 +1,31 @@
 package edu.mobicom.lifeplus;
 
-public class Task {
+public class Indulgence {
 
 	private int id;
 	private String name;
 	private String desc;
-	private Boolean isChecked;
+	private int price;
 	
-	public Task() {
+	public Indulgence() {
 		id = -1;
 		name = "";
 		desc = "";
-		isChecked = false;
+		price = 0;
 	}
 	
-	public Task(String name, String desc, Boolean isChecked) {
+	public Indulgence(String name, String desc, int price) {
 		id = -1;
 		this.name = name;
 		this.desc = desc;
-		this.isChecked = isChecked;
+		this.price = price;
 	}
 	
-	public Task(int id, String name, String desc, Boolean isChecked) {
+	public Indulgence(int id, String name, String desc, int price) {
 		this.id = id;
 		this.name = name;
 		this.desc = desc;
-		this.isChecked = isChecked;
+		this.price = price;
 	}
 	
 	public int getID() {
@@ -40,8 +40,8 @@ public class Task {
 		return desc;
 	}
 	
-	public Boolean isChecked() {
-		return isChecked;
+	public int getPrice() {
+		return price;
 	}
 	
 	public void setID(int id) {
@@ -56,8 +56,8 @@ public class Task {
 		this.desc = desc;
 	}
 	
-	public void setChecked(Boolean isChecked) {
-		this.isChecked = isChecked;
+	public void setPrice(int price) {
+		this.price = price;
 	}
 	
 }

@@ -42,10 +42,15 @@ public class MainActivity extends Activity implements
 		add(new Task("Submit homework", "SUBJECT S01 @ 11:59 PM", false));
 		add(new Task("Pay bills", "Electricity and water | Due Oct 15", true));
 	}};
+	private ArrayList<Indulgence> indulgences_values = new ArrayList<Indulgence>(){{
+		add(new Indulgence("Cheat day", "Eat all you can", 20));
+		add(new Indulgence("Movie marathon", "Watch all you can", 10));
+	}};
 	
-	private Fragment daily_quest_fragment = ListFragment.newInstance(1, quest_values);
-	private Fragment todo_list_fragment = ListFragment.newInstance(2, todo_values);
-	private Fragment profile_fragment = ProfileFragment.newInstance(3);
+	private Fragment daily_quest_fragment = CustomListFragment.newInstance(1, quest_values);
+	private Fragment todo_list_fragment = CustomListFragment.newInstance(2, todo_values);
+	private Fragment indulgences_fragment = IndulgencesFragment.newInstance(3, indulgences_values);
+	private Fragment profile_fragment = ProfileFragment.newInstance(4);
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +89,12 @@ public class MainActivity extends Activity implements
 			fragmentManager
 			.beginTransaction()
 			.replace(R.id.container,
+					indulgences_fragment).commit();
+			break;
+		case 3:
+			fragmentManager
+			.beginTransaction()
+			.replace(R.id.container,
 					profile_fragment).commit();
 			break;
 		default:
@@ -104,6 +115,9 @@ public class MainActivity extends Activity implements
 			break;
 		case 3:
 			mTitle = getString(R.string.title_section3);
+			break;
+		case 4:
+			mTitle = getString(R.string.title_section4);
 			break;
 		}
 	}
@@ -128,6 +142,14 @@ public class MainActivity extends Activity implements
 			else if(mTitle.equals(getString(R.string.title_section2)))
 				menu.getItem(0).setVisible(false);
 			else if(mTitle.equals(getString(R.string.title_section3))) {
+				menu.getItem(0).setVisible(false);
+				menu.getItem(1).setVisible(false);
+				menu.getItem(2).setVisible(false);
+				menu.getItem(3).setVisible(false);
+				menu.getItem(4).setVisible(false);
+				menu.add("Credits: 1000").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+			}
+			else  if(mTitle.equals(getString(R.string.title_section4))) {
 				menu.getItem(0).setVisible(false);
 				menu.getItem(1).setVisible(false);
 				menu.getItem(2).setVisible(false);
@@ -222,6 +244,12 @@ public class MainActivity extends Activity implements
 		else if (id == R.id.marked_done) {
 			showAlertDialog(1);			
 			return true;
+		}
+		else if (id == R.id.add_quest) {
+			getFragmentManager()
+			.beginTransaction()
+			.replace(R.id.container,
+					AddDailyQuestFragment.newInstance("", "")).commit();
 		}
 		return super.onOptionsItemSelected(item);
 	}
