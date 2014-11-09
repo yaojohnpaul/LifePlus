@@ -119,7 +119,17 @@ public class CustomListFragment extends Fragment implements
             	TextView name = (TextView)rl.findViewById(R.id.itemName);
             	TextView desc = (TextView)rl.findViewById(R.id.itemDesc);
             	CheckBox cb = (CheckBox)rl.findViewById(R.id.itemCheck);
-            	Toast.makeText(getActivity(),  "Edit " + name.getText().toString() + ".", Toast.LENGTH_SHORT).show();
+            	
+            	if(mSectionNumber == 1)
+            		getFragmentManager()
+        			.beginTransaction()
+        			.replace(R.id.container,
+        					EditDailyQuestFragment.newInstance("", "")).commit();
+            	else if(mSectionNumber == 2)
+            		getFragmentManager()
+        			.beginTransaction()
+        			.replace(R.id.container,
+        					EditToDoFragment.newInstance("", "")).commit();
                 return true;
             }
         }); 

@@ -2,12 +2,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="edu.mobicom.lifeplus.AddDailyQuestFragment" >
+    tools:context="edu.mobicom.lifeplus.EditToDoFragment" >
 
     <!-- TODO: Update blank fragment layout -->
 
     <Button
-        android:id="@+id/button_add_quest_done"
+        android:id="@+id/button_edit_to_do_done"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -15,13 +15,13 @@
         android:text="Done" />
 
     <TextView
-        android:id="@+id/tv_add_quest_label"
+        android:id="@+id/tv_edit_to_do_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
-        android:text="Add a Daily Quest"
+        android:text="Edit a Task"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
 </RelativeLayout>

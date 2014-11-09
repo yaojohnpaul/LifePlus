@@ -8,19 +8,19 @@ import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 
 /**
  * A simple {@link Fragment} subclass. Activities that contain this fragment
- * must implement the
- * {@link AddDailyQuestFragment.OnFragmentInteractionListener} interface to
- * handle interaction events. Use the {@link AddDailyQuestFragment#newInstance}
- * factory method to create an instance of this fragment.
+ * must implement the {@link AddToDoFragment.OnFragmentInteractionListener}
+ * interface to handle interaction events. Use the
+ * {@link AddToDoFragment#newInstance} factory method to create an instance of
+ * this fragment.
  *
  */
-public class AddDailyQuestFragment extends Fragment {
+public class AddToDoFragment extends Fragment {
 	// TODO: Rename parameter arguments, choose names that match
 	// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 	private static final String ARG_PARAM1 = "param1";
@@ -40,11 +40,11 @@ public class AddDailyQuestFragment extends Fragment {
 	 *            Parameter 1.
 	 * @param param2
 	 *            Parameter 2.
-	 * @return A new instance of fragment AddDailyQuestFragment.
+	 * @return A new instance of fragment AddToDoFragment.
 	 */
 	// TODO: Rename and change types and number of parameters
-	public static AddDailyQuestFragment newInstance(String param1, String param2) {
-		AddDailyQuestFragment fragment = new AddDailyQuestFragment();
+	public static AddToDoFragment newInstance(String param1, String param2) {
+		AddToDoFragment fragment = new AddToDoFragment();
 		Bundle args = new Bundle();
 		args.putString(ARG_PARAM1, param1);
 		args.putString(ARG_PARAM2, param2);
@@ -52,7 +52,7 @@ public class AddDailyQuestFragment extends Fragment {
 		return fragment;
 	}
 
-	public AddDailyQuestFragment() {
+	public AddToDoFragment() {
 		// Required empty public constructor
 	}
 
@@ -69,26 +69,24 @@ public class AddDailyQuestFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
-		View v = inflater.inflate(R.layout.fragment_add_daily_quest, container,
+		View v = inflater.inflate(R.layout.fragment_add_to_do, container,
 				false);
 		
-		Button buttonDone = (Button)v.findViewById(R.id.button_add_quest_done);
+		Button buttonDone = (Button)v.findViewById(R.id.button_add_to_do_done);
 		buttonDone.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				ArrayList<Task> quest_values = new ArrayList<Task>(){{
-					add(new Task("Exercise", "1-hour | HIIT workout", false));
-					add(new Task("Walk the dog", "Around the park", true));
-					add(new Task("Read e-mails", "10 minutes", false));
-					add(new Task("Study", "30 minutes", false));
+				ArrayList<Task> todo_values = new ArrayList<Task>(){{
+					add(new Task("Submit homework", "SUBJECT S01 @ 11:59 PM", false));
+					add(new Task("Pay bills", "Electricity and water | Due Oct 15", true));
 				}};
 				
 				getActivity().getFragmentManager()
 				.beginTransaction()
 				.replace(R.id.container,
-						CustomListFragment.newInstance(1, quest_values)).commit();
+						CustomListFragment.newInstance(2, todo_values)).commit();
 			}
 		});
 		

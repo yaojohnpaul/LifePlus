@@ -1,5 +1,7 @@
 package edu.mobicom.lifeplus;
 
+import java.util.ArrayList;
+
 import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
@@ -7,6 +9,8 @@ import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 
 /**
  * A simple {@link Fragment} subclass. Activities that contain this fragment
@@ -65,7 +69,30 @@ public class EditDailyQuestFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
-		return inflater.inflate(R.layout.fragment_edit_daily_quest, container, false);
+		View v = inflater.inflate(R.layout.fragment_edit_daily_quest, container,
+				false);
+		
+		Button buttonDone = (Button)v.findViewById(R.id.button_edit_quest_done);
+		buttonDone.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				ArrayList<Task> quest_values = new ArrayList<Task>(){{
+					add(new Task("Exercise", "1-hour | HIIT workout", false));
+					add(new Task("Walk the dog", "Around the park", true));
+					add(new Task("Read e-mails", "10 minutes", false));
+					add(new Task("Study", "30 minutes", false));
+				}};
+				
+				getActivity().getFragmentManager()
+				.beginTransaction()
+				.replace(R.id.container,
+						CustomListFragment.newInstance(1, quest_values)).commit();
+			}
+		});
+		
+		return v; 
 	}
 
 	// TODO: Rename method, update argument and hook method into UI event
@@ -79,7 +106,14 @@ public class EditDailyQuestFragment extends Fragment {
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		try {
-			mListener = (OnFragmentInteractionListener) activity;
+			mListener = new OnFragmentInteractionListener() {
+				
+				@Override
+				public void onFragmentInteraction(Uri uri) {
+					// TODO Auto-generated method stub
+					
+				}
+			};
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString()
 					+ " must implement OnFragmentInteractionListener");
