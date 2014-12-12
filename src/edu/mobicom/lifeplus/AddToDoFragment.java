@@ -1,8 +1,15 @@
 package edu.mobicom.lifeplus;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -11,6 +18,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.TimePicker;
+import android.widget.Toast;
 
 /**
  * A simple {@link Fragment} subclass. Activities that contain this fragment
@@ -72,27 +83,116 @@ public class AddToDoFragment extends Fragment {
 		View v = inflater.inflate(R.layout.fragment_add_to_do, container,
 				false);
 		
+		final EditText etName = (EditText) v
+				.findViewById(R.id.et_add_todo_name);
+		final EditText etDesc = (EditText) v
+				.findViewById(R.id.et_add_todo_desc);
+		final EditText etTime = (EditText) v
+				.findViewById(R.id.et_add_todo_time);
+		final EditText etDate = (EditText) v
+				.findViewById(R.id.et_add_todo_date);
+		
+		etTime.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				final Calendar c = Calendar.getInstance();
+				int mHour = c.get(Calendar.HOUR_OF_DAY);
+				int mMinute = c.get(Calendar.MINUTE);
+
+				// Launch Time Picker Dialog
+				TimePickerDialog tpd = new TimePickerDialog(getActivity(),
+						new TimePickerDialog.OnTimeSetListener() {
+
+							@Override
+							public void onTimeSet(TimePicker view,
+									int hourOfDay, int minute) {
+								// Display Selected time in textbox
+								etTime.setText(hourOfDay + ":" + String.format("%02d%n", minute));
+							}
+						}, mHour, mMinute, false);
+				tpd.show();
+			}
+		});
+		
+		etDate.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				final Calendar c = Calendar.getInstance();
+				int mMonth = c.get(Calendar.MONTH);
+				int mYear = c.get(Calendar.YEAR);
+				int mDay = c.get(Calendar.DAY_OF_MONTH);
+
+				// Launch Time Picker Dialog
+				DatePickerDialog tpd = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
+					
+					
+					@SuppressWarnings("deprecation")
+					@Override
+					public void onDateSet(DatePicker view, int year, int monthOfYear,
+							int dayOfMonth) {
+						// TODO Auto-generated method stub
+						etDate.setText(monthOfYear+1 + " " + dayOfMonth + " " + year);
+						
+					}
+				}, mYear, mMonth, mDay);
+				tpd.show();
+						
+			}
+		});
+
+
+		
 		Button buttonDone = (Button)v.findViewById(R.id.button_add_to_do_done);
 		buttonDone.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				ArrayList<Task> todo_values = new ArrayList<Task>(){{
-					add(new Task("Submit homework", "SUBJECT S01 @ 11:59 PM", false));
-					add(new Task("Pay bills", "Electricity and water | Due Oct 15", true));
-				}};
-				
-				getActivity().getFragmentManager()
-				.beginTransaction()
-				.replace(R.id.container,
-						CustomListFragment.newInstance(2, todo_values)).commit();
+				String name = etName.getText().toString();
+				String desc = etDesc.getText().toString();
+
+				if (name.isEmpty())
+					Toast.makeText(getActivity(),
+							"Please enter a name for the daily quest.",
+							Toast.LENGTH_SHORT).show();
+				else if (desc.isEmpty())
+					Toast.makeText(getActivity(),
+							"Please enter a description for the daily quest.",
+							Toast.LENGTH_SHORT).show();
+				else {
+
+					Task newQuest;
+					try {
+						newQuest = new Task(name, desc, new SimpleDateFormat("yyyyMMdd", Locale.ENGLISH)
+						.parse(etDate.getText().toString()), etTime.getText()
+								.toString(), 2, false);
+						DatabaseManager db = new DatabaseManager(getActivity(),
+								"LifePlusTest", null, 1);
+
+						db.addTask(newQuest);
+
+						getActivity()
+								.getFragmentManager()
+								.beginTransaction()
+								.replace(
+										R.id.container,
+										CustomListFragment.newInstance(1,
+												db.getTodoList())).commit();
+					} catch (ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+				}
 			}
 		});
-		
-		return v; 
-	}
 
+		return v;
+	}
 	// TODO: Rename method, update argument and hook method into UI event
 	public void onButtonPressed(Uri uri) {
 		if (mListener != null) {

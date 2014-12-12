@@ -79,8 +79,8 @@ public class EditToDoFragment extends Fragment {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				ArrayList<Task> todo_values = new ArrayList<Task>(){{
-					add(new Task("Submit homework", "SUBJECT S01 @ 11:59 PM", false));
-					add(new Task("Pay bills", "Electricity and water | Due Oct 15", true));
+					add(new Task("Submit homework", "SUBJECT S01", "23:59", 2, false));
+					add(new Task("Pay bills", "Electricity and water", "9:00", 2, true));
 				}};
 				
 				getActivity().getFragmentManager()

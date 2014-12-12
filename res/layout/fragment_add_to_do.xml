@@ -1,27 +1,107 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="edu.mobicom.lifeplus.AddToDoFragment" >
+    android:orientation="vertical" >
+    <TextView
+        android:id="@+id/tv_todo_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add Task"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <!-- TODO: Update blank fragment layout -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
 
+        <TextView
+            android:id="@+id/tv_add_todo_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Name:"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <EditText
+            android:id="@+id/et_add_todo_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.08" >
+
+            <requestFocus />
+        </EditText>
+    </LinearLayout>
+
+    
+
+        <TextView
+            android:id="@+id/tv_add_todo_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Description:"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <EditText
+            android:id="@+id/et_add_todo_desc"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="top|left"
+            android:inputType="textMultiLine"
+            android:lines="8"
+            android:maxLines="8"
+            android:minLines="6"
+            android:scrollbars="vertical" />
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/tv_add_todo_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Time:"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <EditText
+            android:id="@+id/et_add_todo_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines = "1"
+            android:layout_weight="0.13"
+            android:focusable="false" />
+    </LinearLayout>
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/tv_add_todo_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Date:"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <EditText
+            android:id="@+id/et_add_todo_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines = "1"
+            android:layout_weight="0.13"
+            android:focusable="false" />
+    </LinearLayout>
+   
     <Button
+        android:layout_marginTop="150dp"
         android:id="@+id/button_add_to_do_done"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
         android:text="Done" />
 
-    <TextView
-        android:id="@+id/tv_add_to_do_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:text="Add a Task"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
 
-</RelativeLayout>
+    
+
+</LinearLayout>

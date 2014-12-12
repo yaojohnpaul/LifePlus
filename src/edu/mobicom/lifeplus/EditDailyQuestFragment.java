@@ -11,13 +11,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * A simple {@link Fragment} subclass. Activities that contain this fragment
- * must implement the {@link EditDailyQuestFragment.OnFragmentInteractionListener}
- * interface to handle interaction events. Use the
- * {@link EditDailyQuestFragment#newInstance} factory method to create an instance of
- * this fragment.
+ * must implement the
+ * {@link EditDailyQuestFragment.OnFragmentInteractionListener} interface to
+ * handle interaction events. Use the {@link EditDailyQuestFragment#newInstance}
+ * factory method to create an instance of this fragment.
  *
  */
 public class EditDailyQuestFragment extends Fragment {
@@ -43,7 +46,8 @@ public class EditDailyQuestFragment extends Fragment {
 	 * @return A new instance of fragment EditItemFragment.
 	 */
 	// TODO: Rename and change types and number of parameters
-	public static EditDailyQuestFragment newInstance(String param1, String param2) {
+	public static EditDailyQuestFragment newInstance(String param1,
+			String param2) {
 		EditDailyQuestFragment fragment = new EditDailyQuestFragment();
 		Bundle args = new Bundle();
 		args.putString(ARG_PARAM1, param1);
@@ -69,30 +73,71 @@ public class EditDailyQuestFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
-		View v = inflater.inflate(R.layout.fragment_edit_daily_quest, container,
-				false);
-		
-		Button buttonDone = (Button)v.findViewById(R.id.button_edit_quest_done);
+		View v = inflater.inflate(R.layout.fragment_edit_daily_quest,
+				container, false);
+
+		final DatabaseManager db = new DatabaseManager(getActivity(),
+				"LifePlusTest", null, 1);
+		final EditText etName = (EditText) v
+				.findViewById(R.id.et_edit_daily_name);
+		final EditText etDesc = (EditText) v
+				.findViewById(R.id.et_edit_daily_desc);
+		final EditText etTime = (EditText) v
+				.findViewById(R.id.et_edit_daily_time);
+		TextView tvStatus = (TextView) v
+				.findViewById(R.id.tv_edit_daily_StatusUpdate);
+
+		Task temp = null;
+		for (Task t : db.getDailyQuests())
+			if (t.getID() == Integer.parseInt(mParam1))
+				temp = t;
+
+		etName.setText(temp.getName());
+		etDesc.setText(temp.getDesc());
+		etTime.setText(temp.getTime().substring(0, temp.getTime().length() - 1));
+		if (temp.isChecked() == true)
+			tvStatus.setText("Finished");
+		else
+			tvStatus.setText("Ongoing");
+		Button buttonDone = (Button) v
+				.findViewById(R.id.button_edit_quest_done);
 		buttonDone.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				ArrayList<Task> quest_values = new ArrayList<Task>(){{
-					add(new Task("Exercise", "1-hour | HIIT workout", false));
-					add(new Task("Walk the dog", "Around the park", true));
-					add(new Task("Read e-mails", "10 minutes", false));
-					add(new Task("Study", "30 minutes", false));
-				}};
-				
-				getActivity().getFragmentManager()
-				.beginTransaction()
-				.replace(R.id.container,
-						CustomListFragment.newInstance(1, quest_values)).commit();
+				String name = etName.getText().toString();
+				String desc = etDesc.getText().toString();
+
+				if (name.isEmpty())
+					Toast.makeText(getActivity(),
+							"Please enter a name for the daily quest.",
+							Toast.LENGTH_SHORT).show();
+				else if (desc.isEmpty())
+					Toast.makeText(getActivity(),
+							"Please enter a description for the daily quest.",
+							Toast.LENGTH_SHORT).show();
+				else {
+
+					Task editedQuest = new Task(name, desc, etTime.getText()
+							.toString(), 1, false);
+					DatabaseManager db = new DatabaseManager(getActivity(),
+							"LifePlusTest", null, 1);
+
+					db.editTask(Integer.parseInt(mParam1), editedQuest);
+
+					getActivity()
+							.getFragmentManager()
+							.beginTransaction()
+							.replace(
+									R.id.container,
+									CustomListFragment.newInstance(1,
+											db.getDailyQuests())).commit();
+				}
 			}
 		});
-		
-		return v; 
+
+		return v;
 	}
 
 	// TODO: Rename method, update argument and hook method into UI event
@@ -107,11 +152,11 @@ public class EditDailyQuestFragment extends Fragment {
 		super.onAttach(activity);
 		try {
 			mListener = new OnFragmentInteractionListener() {
-				
+
 				@Override
 				public void onFragmentInteraction(Uri uri) {
 					// TODO Auto-generated method stub
-					
+
 				}
 			};
 		} catch (ClassCastException e) {
