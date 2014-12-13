@@ -45,6 +45,7 @@ public class AddDailyQuestFragment extends Fragment {
 	private EditText etName;
 	private EditText etDesc;
 	private EditText etTime;
+	private EditText etDur;
 	private Spinner spDifficulty;
 	private DatabaseManager db;
 	private ImageButton ibNew;
@@ -93,6 +94,7 @@ public class AddDailyQuestFragment extends Fragment {
 		etName = (EditText) v.findViewById(R.id.et_add_quest_name);
 		etDesc = (EditText) v.findViewById(R.id.et_add_quest_desc);
 		etTime = (EditText) v.findViewById(R.id.et_add_quest_time);
+		etDur = (EditText) v.findViewById(R.id.et_add_quest_duration);
 		spDifficulty = (Spinner) v.findViewById(R.id.sp_add_quest);
 		ibNew = (ImageButton) v.findViewById(R.id.ib_add_quest_capture);
 		ibExisting = (ImageButton) v.findViewById(R.id.ib_add_quest_browse);
@@ -242,8 +244,7 @@ public class AddDailyQuestFragment extends Fragment {
 						Toast.LENGTH_SHORT).show();
 			else {
 
-				Task newQuest = new Task(name, desc, etTime.getText()
-						.toString(), 1, false);
+				Task newQuest = new Task(name, desc, spDifficulty.getSelectedItem().toString(),etDur.getText().toString(),etTime.getText().toString(), 1, false, false);
 				newQuest.setDifficulty(spDifficulty.getSelectedItem()
 						.toString());
 				Log.i("Difficulty", spDifficulty.getSelectedItem().toString()
