@@ -39,6 +39,7 @@ public class AddDailyQuestFragment extends Fragment {
 	private EditText etDesc;
 	private EditText etTime;
 	private Spinner spDifficulty;
+	private DatabaseManager db;
 
 	private OnFragmentInteractionListener mListener;
 
@@ -65,6 +66,7 @@ public class AddDailyQuestFragment extends Fragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		db = new DatabaseManager(getActivity(), Task.DATABASE_NAME, null, 1);
 	}
 
 	@Override
@@ -80,9 +82,10 @@ public class AddDailyQuestFragment extends Fragment {
 		etDesc = (EditText) v.findViewById(R.id.et_add_quest_desc);
 		etTime = (EditText) v.findViewById(R.id.et_add_quest_time);
 		spDifficulty = (Spinner) v.findViewById(R.id.sp_add_quest);
-		
-		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
-		        R.array.spinner_difficulty, android.R.layout.simple_spinner_item);
+
+		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+				getActivity(), R.array.spinner_difficulty,
+				android.R.layout.simple_spinner_item);
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		spDifficulty.setAdapter(adapter);
 
@@ -104,7 +107,7 @@ public class AddDailyQuestFragment extends Fragment {
 									int hourOfDay, int minute) {
 								// Display Selected time in textbox
 								etTime.setText(hourOfDay + ":"
-										+ String.format("%02d%n", minute));
+										+ String.format("%02d%n", minute).trim());
 							}
 						}, mHour, mMinute, false);
 				tpd.show();
@@ -186,11 +189,11 @@ public class AddDailyQuestFragment extends Fragment {
 			else {
 
 				Task newQuest = new Task(name, desc, etTime.getText()
-						.toString().trim(), 1, false);
-				newQuest.setDifficulty(spDifficulty.getSelectedItem().toString());
-				Log.i("Difficulty", spDifficulty.getSelectedItem().toString());
-				DatabaseManager db = new DatabaseManager(getActivity(),
-						Task.DATABASE_NAME, null, 1);
+						.toString(), 1, false);
+				newQuest.setDifficulty(spDifficulty.getSelectedItem()
+						.toString());
+				Log.i("Difficulty", spDifficulty.getSelectedItem().toString()
+						+ " REMOVE THIS LINE; AddDailyQuestFragment.java:191");
 
 				db.addTask(newQuest);
 
@@ -201,11 +204,7 @@ public class AddDailyQuestFragment extends Fragment {
 				getActivity().getFragmentManager().beginTransaction()
 						.replace(R.id.container, daily_quest_fragment).commit();
 			}
-		} 
-		else if (item.getItemId() == R.id.cancel) {
-			DatabaseManager db = new DatabaseManager(getActivity(),
-					Task.DATABASE_NAME, null, 1);
-
+		} else if (item.getItemId() == R.id.cancel) {
 			Fragment daily_quest_fragment = CustomListFragment.newInstance(1,
 					db.getDailyQuests());
 			daily_quest_fragment.setHasOptionsMenu(true);

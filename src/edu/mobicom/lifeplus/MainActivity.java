@@ -43,6 +43,7 @@ public class MainActivity extends Activity implements
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		overridePendingTransition(0, 0);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
@@ -108,16 +109,16 @@ public class MainActivity extends Activity implements
 			mTitle = android.os.Build.MODEL + "\'s " + getString(R.string.title_section4);
 			break;
 		case 5:
-			mTitle = "Add a Daily Quest";
+			mTitle = getString(R.string.title_section5);
 			break;
 		case 6:
-			mTitle = "Edit a Daily Quest";
+			mTitle = getString(R.string.title_section6);
 			break;
 		case 7:
-			mTitle = "Add a Task";
+			mTitle = getString(R.string.title_section7);
 			break;
 		case 8:
-			mTitle = "Edit a Task";
+			mTitle = getString(R.string.title_section8);
 			break;
 		}
 	}

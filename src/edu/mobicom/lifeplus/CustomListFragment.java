@@ -123,24 +123,23 @@ public class CustomListFragment extends Fragment implements
 				// TODO Auto-generated method stub
 				RelativeLayout rl = (RelativeLayout) arg1;
 				TextView itemID = (TextView) rl.findViewById(R.id.itemID);
-				TextView name = (TextView) rl.findViewById(R.id.itemName);
-				TextView desc = (TextView) rl.findViewById(R.id.itemDesc);
-				CheckBox cb = (CheckBox) rl.findViewById(R.id.itemCheck);
 
-				if (mSectionNumber == 1)
-					getFragmentManager()
-							.beginTransaction()
-							.replace(
-									R.id.container,
-									EditDailyQuestFragment.newInstance(itemID
-											.getText().toString(), ""))
+				if (mSectionNumber == 1) {
+					Fragment edit_daily_quest_fragment = EditDailyQuestFragment
+							.newInstance(itemID.getText().toString());
+					edit_daily_quest_fragment.setHasOptionsMenu(true);
+					getFragmentManager().beginTransaction()
+							.replace(R.id.container, edit_daily_quest_fragment)
 							.commit();
-				else if (mSectionNumber == 2)
-					getFragmentManager()
-							.beginTransaction()
-							.replace(R.id.container,
-									EditToDoFragment.newInstance("", ""))
+				} else if (mSectionNumber == 2) {
+					Fragment edit_todo_fragment = EditToDoFragment.newInstance(
+							"", "");
+					edit_todo_fragment.setHasOptionsMenu(true);
+					getFragmentManager().beginTransaction()
+							.replace(R.id.container, edit_todo_fragment)
 							.commit();
+				}
+				
 				return true;
 			}
 		});
@@ -307,7 +306,7 @@ public class CustomListFragment extends Fragment implements
 			public void onClick(DialogInterface dialog, int which) {
 				DatabaseManager db = new DatabaseManager(getActivity(),
 						Task.DATABASE_NAME, null, 1);
-				
+
 				switch (type) {
 				case 0:
 					for (int i = 0; i < mAdapter.getCount(); i++) {

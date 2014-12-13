@@ -6,6 +6,10 @@
     <string name="title_section2">To-do List</string>
     <string name="title_section3">Indulgences</string>
     <string name="title_section4">Profile</string>
+    <string name="title_section5">Add a Daily Quest</string>
+    <string name="title_section6">Edit Daily Quest</string>
+    <string name="title_section7">Add a Task</string>
+    <string name="title_section8">Edit Task</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_example">Example action</string>
