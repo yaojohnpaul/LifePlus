@@ -96,7 +96,7 @@ public class EditToDoFragment extends Fragment {
 		tvDifficulty = (TextView)  v.findViewById(R.id.tv_edit_todo_DifficultyValue);
 
 		Task temp = null;
-		for (Task t : db.getDailyQuests())
+		for (Task t : db.getTodoList())
 			if (t.getID() == Integer.parseInt(mItemID))
 				temp = t;
 		
@@ -227,11 +227,11 @@ public class EditToDoFragment extends Fragment {
 
 			if (name.isEmpty())
 				Toast.makeText(getActivity(),
-						"Please enter a name for the daily quest.",
+						"Please enter a name for the task.",
 						Toast.LENGTH_SHORT).show();
 			else if (desc.isEmpty())
 				Toast.makeText(getActivity(),
-						"Please enter a description for the daily quest.",
+						"Please enter a description for the task.",
 						Toast.LENGTH_SHORT).show();
 			else {
 
@@ -242,7 +242,7 @@ public class EditToDoFragment extends Fragment {
 				db.editTask(Integer.parseInt(mItemID), editedTask);
 
 				Fragment todo_fragment = CustomListFragment.newInstance(
-						1, db.getDailyQuests());
+						1, db.getTodoList());
 				todo_fragment.setHasOptionsMenu(true);
 
 				getActivity().getFragmentManager().beginTransaction()
@@ -250,7 +250,7 @@ public class EditToDoFragment extends Fragment {
 			}
 		} else if (item.getItemId() == R.id.cancel) {
 			Fragment todo_fragment = CustomListFragment.newInstance(1,
-					db.getDailyQuests());
+					db.getTodoList());
 			todo_fragment.setHasOptionsMenu(true);
 
 			getActivity().getFragmentManager().beginTransaction()
