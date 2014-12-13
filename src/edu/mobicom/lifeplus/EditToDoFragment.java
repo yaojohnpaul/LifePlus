@@ -46,7 +46,7 @@ public class EditToDoFragment extends Fragment {
 	private EditText etDur;
 	private EditText etDate;
 	private TextView tvStatus;
-	private Spinner spDifficulty;
+	private TextView tvDifficulty;
 
 	private OnFragmentInteractionListener mListener;
 
@@ -93,24 +93,23 @@ public class EditToDoFragment extends Fragment {
 		etDur = (EditText) v.findViewById(R.id.et_edit_todo_duration);
 		etDate = (EditText) v.findViewById(R.id.et_edit_todo_date);
 		tvStatus = (TextView) v.findViewById(R.id.tv_edit_todo_status);
-		spDifficulty = (Spinner) v.findViewById(R.id.sp_edit_todo);
-		
-		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-				getActivity(), R.array.spinner_difficulty,
-				android.R.layout.simple_spinner_item);
-		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		spDifficulty.setAdapter(adapter);
-		
+		tvDifficulty = (TextView)  v.findViewById(R.id.tv_edit_todo_DifficultyValue);
+
 		Task temp = null;
 		for (Task t : db.getDailyQuests())
 			if (t.getID() == Integer.parseInt(mItemID))
 				temp = t;
 		
+		tvDifficulty.setText(temp.getDifficulty());
 		etName.setText(temp.getName());
 		etDesc.setText(temp.getDesc());
 		etTime.setText(temp.getTime());
 		etDur.setText(temp.getDuration());
 		etDate.setText(temp.getDate().toString());
+		if (temp.getStatus() == true)
+			tvStatus.setText("Finished");
+		else
+			tvStatus.setText("Active");
 		
 		etTime.setOnClickListener(new OnClickListener() {
 
@@ -236,8 +235,7 @@ public class EditToDoFragment extends Fragment {
 						Toast.LENGTH_SHORT).show();
 			else {
 
-				Task editedTask = new Task(name, desc, spDifficulty
-						.getSelectedItem().toString(), etDur.getText()
+				Task editedTask = new Task(name, desc, tvDifficulty.getText().toString(), etDur.getText()
 						.toString(), etTime.getText().toString(), 2, false,
 						false);
 
