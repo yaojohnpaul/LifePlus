@@ -8,9 +8,12 @@ public class Task {
 	static final String COLUMN_ID = "_id";
 	static final String COLUMN_NAME = "name";
 	static final String COLUMN_DESC = "desc";
+	static final String COLUMN_DIFFICULTY = "difficulty";
+	static final String COLUMN_DURATION = "duration";
 	static final String COLUMN_DATE = "date";
 	static final String COLUMN_TIME = "time";
 	static final String COLUMN_TYPE = "type";
+	static final String COLUMN_GENERATED = "generated";
 	static final String COLUMN_STATUS = "status";
 	static final String DATABASE_NAME = "LifePlus";
 	
@@ -18,56 +21,72 @@ public class Task {
 	private String name;
 	private String desc;
 	private Date date;
-	private String	time;
-	private int type; // 1 daily, 2 normal task
-	private Boolean isChecked;
 	private String difficulty;
+	private String duration;
+	private String	time;
+	private boolean generated;
+	private int type; // 1 daily, 2 normal task
+	private boolean status;
 	
 	public Task() {
 		id = -1;
 		name = "";
 		desc = "";
-		isChecked = false;
+		status = false;
+		duration = "";
+		generated = false;
 	}
 	
-	public Task(String name, String desc, Date date, String time, int type, Boolean isChecked) {
+	public Task(String name, String desc, String difficulty, String duration, Date date, String time, int type, boolean generated, boolean status) {
 		id = -1;
 		this.name = name;
 		this.desc = desc;
+		this.difficulty = difficulty;
+		this.duration = duration;
 		this.date = date;
 		this.time = time;
 		this.type = type;
-		this.isChecked = isChecked;
+		this.generated = generated;
+		this.status = status;
 	}
 	
-	public Task(String name, String desc, String time, int type, Boolean isChecked) {
+	public Task(String name, String desc, String difficulty, String duration, String time, int type,boolean generated, boolean status) {
 		id = -1;
 		this.name = name;
 		this.desc = desc;
+		this.difficulty = difficulty;
+		this.duration = duration;
 		this.date = null;
 		this.time = time;
 		this.type = type;
-		this.isChecked = isChecked;
+		this.generated = generated;
+		this.status = status;
 	}
 	
-	public Task(int id, String name, String desc, Date date, String time, int type, Boolean isChecked) {
+	public Task(int id, String name, String desc, String difficulty, String duration, Date date, String time, int type,boolean generated, boolean status) {
 		this.id = id;
 		this.name = name;
 		this.desc = desc;
+		this.difficulty = difficulty;
+		this.duration = duration;
 		this.date = date;
 		this.time = time;
 		this.type = type;
-		this.isChecked = isChecked;
+		this.generated = generated;
+		this.status = status;
 	}
 	
-	public Task(int id, String name, String desc, String time, int type, Boolean isChecked) {
+	public Task(int id, String name, String desc, String difficulty, String duration, String time, int type,boolean generated, boolean status) {
 		this.id = id;
 		this.name = name;
 		this.desc = desc;
+		this.difficulty = difficulty;
+		this.duration = duration;
 		this.date = null;
 		this.time = time;
 		this.type = type;
-		this.isChecked = isChecked;
+		this.generated = generated;
+		this.status = status;
 	}
 	
 	public int getID() {
@@ -94,13 +113,30 @@ public class Task {
 		return type;
 	}
 	
-	public Boolean isChecked() {
-		return isChecked;
+	public Boolean getStatus() {
+		return status;
 	}
 	
 	public String getDifficulty() {
 		return difficulty;
 	}
+	
+	public String getDuration() {
+		return duration;
+	}
+
+	public void setDuration(String duration) {
+		this.duration = duration;
+	}
+
+	public boolean getGenerated() {
+		return generated;
+	}
+
+	public void setGenerated(boolean generated) {
+		this.generated = generated;
+	}
+
 	
 	public void setID(int id) {
 		this.id = id;
@@ -122,8 +158,8 @@ public class Task {
 		this.time = time;
 	}
 	
-	public void setChecked(Boolean isChecked) {
-		this.isChecked = isChecked;
+	public void setStatus(boolean status) {
+		this.status = status;
 	}
 	
 	public void setDifficulty(String difficulty) {

@@ -30,7 +30,7 @@ import android.widget.Toast;
  * {@link EditDailyQuestFragment.OnFragmentInteractionListener} interface to
  * handle interaction events. Use the {@link EditDailyQuestFragment#newInstance}
  * factory method to create an instance of this fragment.
- *
+ * 
  */
 public class EditDailyQuestFragment extends Fragment {
 	// TODO: Rename parameter arguments, choose names that match
@@ -44,6 +44,7 @@ public class EditDailyQuestFragment extends Fragment {
 	private EditText etName;
 	private EditText etDesc;
 	private EditText etTime;
+	private EditText etDur;
 	private Spinner spDifficulty;
 
 	private OnFragmentInteractionListener mListener;
@@ -51,7 +52,7 @@ public class EditDailyQuestFragment extends Fragment {
 	/**
 	 * Use this factory method to create a new instance of this fragment using
 	 * the provided parameters.
-	 *
+	 * 
 	 * @param param1
 	 *            Parameter 1.
 	 * @param param2
@@ -109,7 +110,7 @@ public class EditDailyQuestFragment extends Fragment {
 		etDesc.setText(temp.getDesc());
 		etTime.setText(temp.getTime());
 
-		if (temp.isChecked() == true)
+		if (temp.getStatus() == true)
 			tvStatus.setText("Finished");
 		else
 			tvStatus.setText("Active");
@@ -131,8 +132,10 @@ public class EditDailyQuestFragment extends Fragment {
 							public void onTimeSet(TimePicker view,
 									int hourOfDay, int minute) {
 								// Display Selected time in textbox
-								etTime.setText(hourOfDay + ":"
-										+ String.format("%02d%n", minute).trim());
+								etTime.setText(hourOfDay
+										+ ":"
+										+ String.format("%02d%n", minute)
+												.trim());
 							}
 						}, mHour, mMinute, false);
 				tpd.show();
@@ -211,8 +214,10 @@ public class EditDailyQuestFragment extends Fragment {
 						Toast.LENGTH_SHORT).show();
 			else {
 
-				Task editedQuest = new Task(name, desc, etTime.getText()
-						.toString(), 1, false);
+				Task editedQuest = new Task(name, desc, spDifficulty
+						.getSelectedItem().toString(), etDur.getText()
+						.toString(), etTime.getText().toString(), 1, false,
+						false);
 
 				db.editTask(Integer.parseInt(mItemID), editedQuest);
 
