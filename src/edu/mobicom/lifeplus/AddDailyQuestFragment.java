@@ -8,7 +8,12 @@ import android.app.DialogFragment;
 import android.app.TimePickerDialog;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.app.Fragment;
+import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -20,6 +25,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -40,6 +47,11 @@ public class AddDailyQuestFragment extends Fragment {
 	private EditText etTime;
 	private Spinner spDifficulty;
 	private DatabaseManager db;
+	private ImageButton ibNew;
+	private ImageButton ibExisting;
+	private ImageView ivImage;
+	private static int RESULT_LOAD_IMAGE = 1;
+	private static final int CAMERA_REQUEST = 1888; 
 
 	private OnFragmentInteractionListener mListener;
 
@@ -82,6 +94,9 @@ public class AddDailyQuestFragment extends Fragment {
 		etDesc = (EditText) v.findViewById(R.id.et_add_quest_desc);
 		etTime = (EditText) v.findViewById(R.id.et_add_quest_time);
 		spDifficulty = (Spinner) v.findViewById(R.id.sp_add_quest);
+		ibNew = (ImageButton) v.findViewById(R.id.ib_add_quest_capture);
+		ibExisting = (ImageButton) v.findViewById(R.id.ib_add_quest_browse);
+		ivImage = (ImageView) v.findViewById(R.id.iv_add_quest);
 
 		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
 				getActivity(), R.array.spinner_difficulty,
@@ -113,9 +128,48 @@ public class AddDailyQuestFragment extends Fragment {
 				tpd.show();
 			}
 		});
-
+		
+		
+		ibExisting.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent i = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(i, RESULT_LOAD_IMAGE);
+			}
+		});
+		
+		ibNew.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE); 
+                startActivityForResult(cameraIntent, CAMERA_REQUEST);
+			}
+		});
+		
 		return v;
 	}
+	
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RESULT_LOAD_IMAGE && resultCode == -1 && null != data) {
+            Uri selectedImage = data.getData();
+            String[] filePathColumn = { MediaStore.Images.Media.DATA };
+            Cursor cursor = getActivity().getContentResolver().query(selectedImage,filePathColumn, null, null, null);
+            cursor.moveToFirst();
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            String picturePath = cursor.getString(columnIndex);
+            cursor.close();
+            ivImage.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+        } else if (requestCode == CAMERA_REQUEST && resultCode == -1) {  
+            Bitmap photo = (Bitmap) data.getExtras().get("data"); 
+            ivImage.setImageBitmap(photo);
+        }
+    }
 
 	// TODO: Rename method, update argument and hook method into UI event
 	public void onButtonPressed(Uri uri) {
