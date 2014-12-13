@@ -235,11 +235,11 @@ public class AddToDoFragment extends Fragment {
 
 			if (name.isEmpty())
 				Toast.makeText(getActivity(),
-						"Please enter a name for the daily quest.",
+						"Please enter a name for the task.",
 						Toast.LENGTH_SHORT).show();
 			else if (desc.isEmpty())
 				Toast.makeText(getActivity(),
-						"Please enter a description for the daily quest.",
+						"Please enter a description for the task.",
 						Toast.LENGTH_SHORT).show();
 			else {
 
