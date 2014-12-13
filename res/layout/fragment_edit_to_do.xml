@@ -88,7 +88,6 @@
             android:layout_height="wrap_content"
             android:maxLines="1"
             android:minLines="1"
-            android:hint="Duration of todo"
             android:textAppearance="?android:attr/textAppearanceMedium" />
     </LinearLayout>
     
@@ -111,7 +110,6 @@
             android:focusable="false"
             android:maxLines="1"
             android:minLines="1"
-            android:text="May 1 2014"
             android:textAppearance="?android:attr/textAppearanceMedium" />
     </LinearLayout>
     
@@ -134,7 +132,6 @@
             android:focusable="false"
             android:maxLines="1"
             android:minLines="1"
-            android:text="00:00"
             android:textAppearance="?android:attr/textAppearanceMedium" />
     </LinearLayout>
     
@@ -150,13 +147,10 @@
             android:text="Status: "
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
-        <EditText
-            android:id="@+id/et_edit_todo_status"
+        <TextView
+            android:id="@+id/tv_edit_todo_StatusUpdate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxLines="1"
-            android:minLines="1"
-            android:text=""
             android:textAppearance="?android:attr/textAppearanceMedium" />
     </LinearLayout>
 
