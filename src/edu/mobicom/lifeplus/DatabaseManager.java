@@ -1,5 +1,6 @@
 package edu.mobicom.lifeplus;
 
+import java.io.ByteArrayOutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -12,6 +13,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.CompressFormat;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 
 public class DatabaseManager extends SQLiteOpenHelper {
@@ -26,14 +30,19 @@ public class DatabaseManager extends SQLiteOpenHelper {
 	public void onCreate(SQLiteDatabase db) {
 		// Create Task Table
 		Log.i("DATABASE", "onCreate()");
-		db.execSQL("CREATE TABLE " + Task.TABLE_NAME + " (" + Task.COLUMN_ID
-				+ " integer PRIMARY KEY autoincrement," + Task.COLUMN_NAME
-				+ " text," + Task.COLUMN_DESC + " text,"
-				+ Task.COLUMN_DIFFICULTY + " integer," + Task.COLUMN_DURATION
-				+ " text," + Task.COLUMN_TIME + " text," + Task.COLUMN_DATE
-				+ " date," + Task.COLUMN_TYPE + " text,"
-				+ Task.COLUMN_GENERATED + " boolean," + Task.COLUMN_CHECKED
-				+ " boolean," + Task.COLUMN_STATUS + " boolean)");
+		db.execSQL("CREATE TABLE " + Task.TABLE_NAME + " (" 
+				+ Task.COLUMN_ID + " integer PRIMARY KEY autoincrement," 
+				+ Task.COLUMN_NAME + " text," 
+				+ Task.COLUMN_DESC + " text,"
+				+ Task.COLUMN_DIFFICULTY + " integer," 
+				+ Task.COLUMN_DURATION + " text," 
+				+ Task.COLUMN_TIME + " text," 
+				+ Task.COLUMN_DATE + " date," 
+				+ Task.COLUMN_IMAGE + " blob,"
+				+ Task.COLUMN_TYPE + " text,"
+				+ Task.COLUMN_GENERATED + " boolean," 
+				+ Task.COLUMN_CHECKED + " boolean," 
+				+ Task.COLUMN_STATUS + " boolean)");
 
 		db.execSQL("CREATE TABLE " + Indulgence.TABLE_NAME + " ("
 				+ Task.COLUMN_ID + " integer PRIMARY KEY autoincrement,"
@@ -49,12 +58,20 @@ public class DatabaseManager extends SQLiteOpenHelper {
 	public void editTask(int id, Task t) {
 		SQLiteDatabase db = getWritableDatabase();
 		ContentValues values = new ContentValues();
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		Bitmap temp = null;
 
 		values.put(Task.COLUMN_NAME, t.getName());
 		values.put(Task.COLUMN_DESC, t.getDesc());
 		values.put(Task.COLUMN_DURATION, t.getDuration());
 		values.put(Task.COLUMN_TIME, t.getTime());
 		values.put(Task.COLUMN_DIFFICULTY, t.getDifficulty());
+
+		temp = t.getImage();
+		if (temp != null) {
+			temp.compress(CompressFormat.PNG, 0, outputStream);
+			values.put(Task.COLUMN_IMAGE, outputStream.toByteArray());
+		}
 
 		if (t.getGenerated() == true)
 			values.put(Task.COLUMN_GENERATED, 1);
@@ -94,14 +111,21 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
 	public void addTask(Task t) {
 		SQLiteDatabase db = getWritableDatabase();
-
 		ContentValues values = new ContentValues();
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		Bitmap temp = null;
 
 		values.put(Task.COLUMN_NAME, t.getName());
 		values.put(Task.COLUMN_DESC, t.getDesc());
 		values.put(Task.COLUMN_DURATION, t.getDuration());
 		values.put(Task.COLUMN_TIME, t.getTime());
 		values.put(Task.COLUMN_DIFFICULTY, t.getDifficulty());
+		
+		temp = t.getImage();
+		if (temp != null) {
+			temp.compress(CompressFormat.PNG, 0, outputStream);
+			values.put(Task.COLUMN_IMAGE, outputStream.toByteArray());
+		}
 
 		if (t.getGenerated() == true)
 			values.put(Task.COLUMN_GENERATED, 1);
@@ -148,12 +172,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 	public ArrayList<Task> getDailyQuests() {
 
 		SQLiteDatabase db = getReadableDatabase();
-		Cursor c = db.query(Task.TABLE_NAME, /*
-											 * new String[] { Task.COLUMN_NAME,
-											 * Task.COLUMN_DESC,
-											 * Task.COLUMN_TIME,
-											 * Task.COLUMN_STATUS }
-											 */null, Task.COLUMN_TYPE + " = ?",
+		Cursor c = db.query(Task.TABLE_NAME, null, Task.COLUMN_TYPE + " = ?",
 				new String[] { "1" }, null, null, null);
 
 		ArrayList<Task> daily = new ArrayList<Task>();
@@ -168,6 +187,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 				String duration = c.getString(c
 						.getColumnIndex(Task.COLUMN_DURATION));
 				String time = c.getString(c.getColumnIndex(Task.COLUMN_TIME));
+				byte[] imgByte = c.getBlob(7);
 
 				int generated = c.getInt(c
 						.getColumnIndex(Task.COLUMN_GENERATED));
@@ -193,9 +213,12 @@ public class DatabaseManager extends SQLiteOpenHelper {
 				} else {
 					isFinished = false;
 				}
+				
+				Task t = new Task(id, name, desc, difficulty, duration, time,
+						1, isGenerated, isChecked, isFinished);
+				t.setImage(BitmapFactory.decodeByteArray(imgByte, 0, imgByte.length));
 
-				daily.add(new Task(id, name, desc, difficulty, duration, time,
-						1, isGenerated, isChecked, isFinished));
+				daily.add(t);
 			} while (c.moveToNext());
 		}
 

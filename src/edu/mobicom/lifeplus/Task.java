@@ -119,6 +119,10 @@ public class Task {
 		return date;
 	}
 	
+	public Bitmap getImage() {
+		return image;
+	}
+	
 	public int getType() {
 		return type;
 	}
@@ -161,6 +165,10 @@ public class Task {
 	
 	public void setTime(String time) {
 		this.time = time;
+	}
+	
+	public void setImage(Bitmap image) {
+		this.image = image;
 	}
 	
 	public void setDifficulty(int difficulty) {

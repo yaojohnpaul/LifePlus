@@ -14,6 +14,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -254,6 +255,7 @@ public class AddDailyQuestFragment extends Fragment {
 						spDifficulty.getSelectedItemPosition(), etDur.getText()
 								.toString(), etTime.getText().toString(), 1,
 						false, false, false);
+				newQuest.setImage(((BitmapDrawable)ivImage.getDrawable()).getBitmap());
 
 				db.addTask(newQuest);
 

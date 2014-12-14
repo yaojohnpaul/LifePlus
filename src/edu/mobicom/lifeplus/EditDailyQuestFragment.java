@@ -19,6 +19,7 @@ import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -45,6 +46,7 @@ public class EditDailyQuestFragment extends Fragment {
 	private EditText etDesc;
 	private EditText etTime;
 	private EditText etDuration;
+	private ImageView ivImage;
 	private int diffPos;
 
 	private OnFragmentInteractionListener mListener;
@@ -92,6 +94,7 @@ public class EditDailyQuestFragment extends Fragment {
 		etDesc = (EditText) v.findViewById(R.id.et_edit_daily_desc);
 		etTime = (EditText) v.findViewById(R.id.et_edit_daily_time);
 		etDuration = (EditText) v.findViewById(R.id.et_edit_quest_duration);
+		ivImage = (ImageView) v.findViewById(R.id.iv_edit_quest);
 		TextView tvStatus = (TextView) v
 				.findViewById(R.id.tv_edit_daily_StatusUpdate);
 		TextView tvDifficulty = (TextView) v
@@ -109,6 +112,7 @@ public class EditDailyQuestFragment extends Fragment {
 		etDesc.setText(temp.getDesc());
 		etTime.setText(temp.getTime());
 		etDuration.setText(temp.getDuration());
+		ivImage.setImageBitmap(temp.getImage());
 
 		if (temp.getStatus() == true)
 			tvStatus.setText("Finished");
