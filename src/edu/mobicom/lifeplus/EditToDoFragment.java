@@ -38,7 +38,7 @@ public class EditToDoFragment extends Fragment {
 
 	// TODO: Rename and change types of parameters
 	private String mItemID;
-	
+
 	private DatabaseManager db;
 	private EditText etName;
 	private EditText etDesc;
@@ -86,20 +86,22 @@ public class EditToDoFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
-		View v = inflater.inflate(R.layout.fragment_edit_to_do, container,false);
+		View v = inflater.inflate(R.layout.fragment_edit_to_do, container,
+				false);
 		etName = (EditText) v.findViewById(R.id.et_edit_todo_name);
 		etDesc = (EditText) v.findViewById(R.id.et_edit_todo_desc);
 		etTime = (EditText) v.findViewById(R.id.et_edit_todo_time);
 		etDur = (EditText) v.findViewById(R.id.et_edit_todo_duration);
 		etDate = (EditText) v.findViewById(R.id.et_edit_todo_date);
 		tvStatus = (TextView) v.findViewById(R.id.tv_edit_todo_status);
-		tvDifficulty = (TextView)  v.findViewById(R.id.tv_edit_todo_DifficultyValue);
+		tvDifficulty = (TextView) v
+				.findViewById(R.id.tv_edit_todo_DifficultyValue);
 
 		Task temp = null;
 		for (Task t : db.getTodoList())
 			if (t.getID() == Integer.parseInt(mItemID))
 				temp = t;
-		
+
 		tvDifficulty.setText(temp.getDifficulty());
 		etName.setText(temp.getName());
 		etDesc.setText(temp.getDesc());
@@ -110,7 +112,7 @@ public class EditToDoFragment extends Fragment {
 			tvStatus.setText("Finished");
 		else
 			tvStatus.setText("Active");
-		
+
 		etTime.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -137,7 +139,7 @@ public class EditToDoFragment extends Fragment {
 				tpd.show();
 			}
 		});
-		
+
 		etDate.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -147,30 +149,30 @@ public class EditToDoFragment extends Fragment {
 				int mYear = c.get(Calendar.YEAR);
 				int mMonth = c.get(Calendar.MONTH);
 				int mDay = c.get(Calendar.DAY_OF_MONTH);
-				
+
 				DatePickerDialog dpd = new DatePickerDialog(getActivity(),
 						new DatePickerDialog.OnDateSetListener() {
-							
+
 							@Override
-							public void onDateSet(DatePicker view, int year, int monthOfYear,
-									int dayOfMonth) {
+							public void onDateSet(DatePicker view, int year,
+									int monthOfYear, int dayOfMonth) {
 								// TODO Auto-generated method stub
-								etDate.setText(monthOfYear+1 + " " + dayOfMonth + " " + year);
-								
+								etDate.setText(monthOfYear + 1 + " "
+										+ dayOfMonth + " " + year);
+
 							}
 						}, mYear, mMonth, mDay);
-				
+
 				dpd.show();
 			}
 		});
-		
-		
+
 		if (temp.getStatus() == true)
 			tvStatus.setText("Finished");
 		else
 			tvStatus.setText("Active");
-		
-		return v; 
+
+		return v;
 	}
 
 	// TODO: Rename method, update argument and hook method into UI event
@@ -185,11 +187,11 @@ public class EditToDoFragment extends Fragment {
 		super.onAttach(activity);
 		try {
 			mListener = new OnFragmentInteractionListener() {
-				
+
 				@Override
 				public void onFragmentInteraction(Uri uri) {
 					// TODO Auto-generated method stub
-					
+
 				}
 			};
 		} catch (ClassCastException e) {
@@ -217,7 +219,7 @@ public class EditToDoFragment extends Fragment {
 		// TODO: Update argument type and name
 		public void onFragmentInteraction(Uri uri);
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// TODO Auto-generated method stub
@@ -227,22 +229,22 @@ public class EditToDoFragment extends Fragment {
 
 			if (name.isEmpty())
 				Toast.makeText(getActivity(),
-						"Please enter a name for the task.",
-						Toast.LENGTH_SHORT).show();
+						"Please enter a name for the task.", Toast.LENGTH_SHORT)
+						.show();
 			else if (desc.isEmpty())
 				Toast.makeText(getActivity(),
 						"Please enter a description for the task.",
 						Toast.LENGTH_SHORT).show();
 			else {
 
-				Task editedTask = new Task(name, desc, tvDifficulty.getText().toString(), etDur.getText()
-						.toString(), etTime.getText().toString(), 2, false,
-						false);
+//				Task editedTask = new Task(name, desc, tvDifficulty.getText()
+//						.toString(), etDur.getText().toString(), etTime
+//						.getText().toString(), 2, false, false, false);
 
-				db.editTask(Integer.parseInt(mItemID), editedTask);
+//				db.editTask(Integer.parseInt(mItemID), editedTask);
 
-				Fragment todo_fragment = CustomListFragment.newInstance(
-						1, db.getTodoList());
+				Fragment todo_fragment = CustomListFragment.newInstance(1,
+						db.getTodoList());
 				todo_fragment.setHasOptionsMenu(true);
 
 				getActivity().getFragmentManager().beginTransaction()
@@ -259,6 +261,5 @@ public class EditToDoFragment extends Fragment {
 
 		return super.onOptionsItemSelected(item);
 	}
-
 
 }

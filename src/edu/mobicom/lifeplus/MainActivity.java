@@ -43,6 +43,7 @@ public class MainActivity extends Activity implements
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		deleteDatabase(Task.DATABASE_NAME);
 		overridePendingTransition(0, 0);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);

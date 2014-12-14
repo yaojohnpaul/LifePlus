@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -64,30 +65,31 @@ public class CustomAdapter extends BaseAdapter {
 		String[] monthName = { "JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL",
 				"AUG", "SEP", "OCT", "NOV", "DEC" };
 
-		if (data.get(position).getTime() == null) {
-			time = "ALL DAY";
-		} else {
-			time = data.get(position).getTime();
-		}
+		time = data.get(position).getTime();
+
+		if (data.get(position).getStatus() == true)
+			vi.setBackgroundColor(Color.DKGRAY);
 
 		if (data.get(position).getDate() == null) {
-			Calendar c = Calendar.getInstance();
-			date = monthName[c.get(Calendar.MONTH)] + " "
-					+ c.get(Calendar.DAY_OF_MONTH);
-		}else {
+			date = data.get(position).getDuration() + " min.";
+		} else {
 			String temp = data.get(position).getDate().toString();
-			date = monthName[Integer.parseInt(temp.substring(4, 6))-1] + " "
+			date = monthName[Integer.parseInt(temp.substring(4, 6)) - 1] + " "
 					+ temp.substring(6);
 		}
 		
+		if(date.equals(" min."))
+			date = "";
+
 		check.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-			
+
 			@Override
-			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+			public void onCheckedChanged(CompoundButton buttonView,
+					boolean isChecked) {
 				// TODO Auto-generated method stub
 				DatabaseManager db = new DatabaseManager(context,
 						Task.DATABASE_NAME, null, 1);
-				
+
 				db.setChecked(data.get(position).getID(), isChecked);
 				data.get(position).setChecked(isChecked);
 			}
@@ -95,12 +97,18 @@ public class CustomAdapter extends BaseAdapter {
 
 		id.setText(String.valueOf(data.get(position).getID()));
 		name.setText(data.get(position).getName());
-		if(data.get(position).getDesc().length() > 30)
-			desc.setText(data.get(position).getDesc().substring(0, 30) + "\n" + data.get(position).getDesc().substring(30));
+
+		if (data.get(position).getDesc().length() > 30)
+			desc.setText(data.get(position).getDesc().substring(0, 30) + "\n"
+					+ data.get(position).getDesc().substring(30));
 		else
 			desc.setText(data.get(position).getDesc());
-		check.setChecked(data.get(position).isChecked());
-		timeDate.setText(time + "\n" + date);
+		check.setChecked(data.get(position).getChecked());
+
+		if (time.equals("00:00"))
+			timeDate.setText(date);
+		else
+			timeDate.setText(time + "\n" + date);
 
 		return vi;
 	}

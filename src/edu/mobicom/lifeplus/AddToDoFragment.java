@@ -235,20 +235,17 @@ public class AddToDoFragment extends Fragment {
 
 			if (name.isEmpty())
 				Toast.makeText(getActivity(),
-						"Please enter a name for the task.",
-						Toast.LENGTH_SHORT).show();
+						"Please enter a name for the task.", Toast.LENGTH_SHORT)
+						.show();
 			else if (desc.isEmpty())
 				Toast.makeText(getActivity(),
 						"Please enter a description for the task.",
 						Toast.LENGTH_SHORT).show();
 			else {
 
-				Task newTodo = new Task(name, desc, spDifficulty
-						.getSelectedItem().toString(), etDur.getText()
+				Task newTodo = new Task(name, desc, spDifficulty.getSelectedItemPosition(), etDur.getText()
 						.toString(), etTime.getText().toString(), 2, false,
-						false);
-				newTodo.setDifficulty(spDifficulty.getSelectedItem()
-						.toString());
+						false, false);
 				Log.i("Difficulty", spDifficulty.getSelectedItem().toString()
 						+ " REMOVE THIS LINE; AddDailyQuestFragment.java:191");
 

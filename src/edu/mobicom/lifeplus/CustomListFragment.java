@@ -132,14 +132,14 @@ public class CustomListFragment extends Fragment implements
 							.replace(R.id.container, edit_daily_quest_fragment)
 							.commit();
 				} else if (mSectionNumber == 2) {
-					Fragment edit_todo_fragment = EditToDoFragment.newInstance(
-							"", "");
+					Fragment edit_todo_fragment = EditToDoFragment
+							.newInstance(itemID.getText().toString());
 					edit_todo_fragment.setHasOptionsMenu(true);
 					getFragmentManager().beginTransaction()
 							.replace(R.id.container, edit_todo_fragment)
 							.commit();
 				}
-				
+
 				return true;
 			}
 		});
@@ -257,7 +257,7 @@ public class CustomListFragment extends Fragment implements
 			getFragmentManager().beginTransaction()
 					.replace(R.id.container, add_daily_quest_fragment).commit();
 		} else if (item.getItemId() == R.id.add_todo) {
-			Fragment add_todo_fragment = AddToDoFragment.newInstance("", "");
+			Fragment add_todo_fragment = AddToDoFragment.newInstance();
 			add_todo_fragment.setHasOptionsMenu(true);
 			getFragmentManager().beginTransaction()
 					.replace(R.id.container, add_todo_fragment).commit();
@@ -311,7 +311,7 @@ public class CustomListFragment extends Fragment implements
 				case 0:
 					for (int i = 0; i < mAdapter.getCount(); i++) {
 						Task temp = (Task) mAdapter.getItem(i);
-						if (temp.isChecked())
+						if (temp.getChecked())
 							db.deleteTask(temp.getID());
 					}
 
@@ -326,8 +326,10 @@ public class CustomListFragment extends Fragment implements
 				case 1:
 					for (int i = 0; i < mAdapter.getCount(); i++) {
 						Task temp = (Task) mAdapter.getItem(i);
-						if (temp.isChecked())
+						if (temp.getChecked()) {
 							db.setAsDone(temp.getID());
+							db.setChecked(temp.getID(), false);
+						}
 					}
 
 					if (mSectionNumber == 1)

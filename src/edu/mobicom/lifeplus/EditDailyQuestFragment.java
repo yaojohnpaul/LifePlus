@@ -44,8 +44,8 @@ public class EditDailyQuestFragment extends Fragment {
 	private EditText etName;
 	private EditText etDesc;
 	private EditText etTime;
-	private EditText etDur;
-	private Spinner spDifficulty;
+	private EditText etDuration;
+	private int diffPos;
 
 	private OnFragmentInteractionListener mListener;
 
@@ -91,15 +91,14 @@ public class EditDailyQuestFragment extends Fragment {
 		etName = (EditText) v.findViewById(R.id.et_edit_daily_name);
 		etDesc = (EditText) v.findViewById(R.id.et_edit_daily_desc);
 		etTime = (EditText) v.findViewById(R.id.et_edit_daily_time);
+		etDuration = (EditText) v.findViewById(R.id.et_edit_quest_duration);
 		TextView tvStatus = (TextView) v
 				.findViewById(R.id.tv_edit_daily_StatusUpdate);
-		spDifficulty = (Spinner) v.findViewById(R.id.sp_edit_quest);
-
+		TextView tvDifficulty = (TextView) v
+				.findViewById(R.id.tv_edit_quest_DifficultyValue);
 		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
 				getActivity(), R.array.spinner_difficulty,
 				android.R.layout.simple_spinner_item);
-		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		spDifficulty.setAdapter(adapter);
 
 		Task temp = null;
 		for (Task t : db.getDailyQuests())
@@ -109,11 +108,15 @@ public class EditDailyQuestFragment extends Fragment {
 		etName.setText(temp.getName());
 		etDesc.setText(temp.getDesc());
 		etTime.setText(temp.getTime());
+		etDuration.setText(temp.getDuration());
 
 		if (temp.getStatus() == true)
 			tvStatus.setText("Finished");
 		else
 			tvStatus.setText("Active");
+
+		diffPos = temp.getDifficulty();
+		tvDifficulty.setText(adapter.getItem(temp.getDifficulty()));
 
 		etTime.setOnClickListener(new OnClickListener() {
 
@@ -214,10 +217,9 @@ public class EditDailyQuestFragment extends Fragment {
 						Toast.LENGTH_SHORT).show();
 			else {
 
-				Task editedQuest = new Task(name, desc, spDifficulty
-						.getSelectedItem().toString(), etDur.getText()
-						.toString(), etTime.getText().toString(), 1, false,
-						false);
+				Task editedQuest = new Task(name, desc, diffPos, etDuration
+						.getText().toString(), etTime.getText().toString(), 1,
+						false, false, false);
 
 				db.editTask(Integer.parseInt(mItemID), editedQuest);
 
