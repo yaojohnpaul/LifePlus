@@ -55,7 +55,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
 				+ Profile.COLUMN_NAME + " text,"
 				+ Profile.COLUMN_EXP + " integer,"
 				+ Profile.COLUMN_CREDITS + " integer,"
-				+ Profile.COLUMN_ACTIVE + " boolean)");
+				+ Profile.COLUMN_ACTIVE + " boolean,"
+				+ Profile.COLUMN_IMAGE + " blob)");
 	}
 
 	@Override
@@ -328,7 +329,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
 		values.put(Profile.COLUMN_EXP, p.getExp());
 
-		db.update(Profile.TABLE_NAME, values, Task.COLUMN_ID + "= ?",
+		db.update(Profile.TABLE_NAME, values, Profile.COLUMN_ID + "= ?",
 				new String[] { String.valueOf(p.getId()) });
 		db.close();
 	}
@@ -340,7 +341,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
 		values.put(Profile.COLUMN_CREDITS, p.getCredits());
 
-		db.update(Profile.TABLE_NAME, values, Task.COLUMN_ID + "= ?",
+		db.update(Profile.TABLE_NAME, values, Profile.COLUMN_ID + "= ?",
 				new String[] { String.valueOf(p.getId()) });
 		db.close();
 	}
@@ -351,7 +352,26 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
 		values.put(Profile.COLUMN_CREDITS, p.getCredits());
 
-		db.update(Profile.TABLE_NAME, values, Task.COLUMN_ID + "= ?",
+		db.update(Profile.TABLE_NAME, values, Profile.COLUMN_ID + "= ?",
+				new String[] { String.valueOf(p.getId()) });
+		db.close();
+	}
+	
+	public void updateProfile(Profile p) {
+		SQLiteDatabase db = getWritableDatabase();
+		ContentValues values = new ContentValues();
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		Bitmap temp = null;
+		
+		temp = p.getImage();
+		if (temp != null) {
+			temp.compress(CompressFormat.PNG, 0, outputStream);
+			values.put(Profile.COLUMN_IMAGE, outputStream.toByteArray());
+		}
+		
+		values.put(Profile.COLUMN_NAME, p.getName());
+
+		db.update(Profile.TABLE_NAME, values, Profile.COLUMN_ID + "= ?",
 				new String[] { String.valueOf(p.getId()) });
 		db.close();
 	}
@@ -419,6 +439,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 				int exp = c.getInt(c.getColumnIndex(Profile.COLUMN_EXP));
 				int credits = c.getInt(c.getColumnIndex(Profile.COLUMN_CREDITS));
 				int active = c.getInt(c.getColumnIndex(Profile.COLUMN_ACTIVE));
+				byte[] imgByte = c.getBlob(c.getColumnIndex(Profile.COLUMN_IMAGE));
 				
 				boolean isActive;
 				if (active == 1) {
@@ -427,8 +448,12 @@ public class DatabaseManager extends SQLiteOpenHelper {
 					isActive = false;
 				}
 				
-				if(isActive)
+				if(isActive) {
 					p = new Profile(id, name, credits, exp, isActive);
+					if (imgByte != null)
+						p.setImage(BitmapFactory.decodeByteArray(imgByte, 0,
+								imgByte.length));
+				}
 			} while (c.moveToNext());
 		}
 

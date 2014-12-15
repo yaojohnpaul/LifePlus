@@ -1,15 +1,7 @@
 package edu.mobicom.lifeplus;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
-
+import edu.mobicom.lifeplus.ProfileFragment.OnFragmentInteractionListener;
 import android.app.Activity;
-import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -19,7 +11,6 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,67 +18,55 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 /**
  * A simple {@link Fragment} subclass. Activities that contain this fragment
- * must implement the {@link AddToDoFragment.OnFragmentInteractionListener}
- * interface to handle interaction events. Use the
- * {@link AddToDoFragment#newInstance} factory method to create an instance of
- * this fragment.
- * 
+ * must implement the {@link Settings.OnFragmentInteractionListener} interface
+ * to handle interaction events. Use the {@link Settings#newInstance} factory
+ * method to create an instance of this fragment.
+ *
  */
-public class AddToDoFragment extends Fragment {
-	// TODO: Rename parameter arguments, choose names that match
-	// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-	private OnFragmentInteractionListener mListener;
-
+public class Settings extends Fragment {
 	private DatabaseManager db;
 	private EditText etName;
-	private EditText etDesc;
-	private EditText etTime;
-	private EditText etDate;
-	private Spinner spDifficulty;
 	private ImageButton ibNew;
 	private ImageButton ibExisting;
 	private ImageView ivImage;
-	private Date mDate;
 	private static final int RESULT_OK = -1;
 	private static final int RESULT_LOAD_IMAGE = 1;
 	private static final int RESULT_CAMERA_REQUEST = 1888;
 
+	private OnFragmentInteractionListener mListener;
+
 	/**
 	 * Use this factory method to create a new instance of this fragment using
 	 * the provided parameters.
-	 * 
+	 *
 	 * @param param1
 	 *            Parameter 1.
 	 * @param param2
 	 *            Parameter 2.
-	 * @return A new instance of fragment AddToDoFragment.
+	 * @return A new instance of fragment Settings.
 	 */
 	// TODO: Rename and change types and number of parameters
-	public static AddToDoFragment newInstance() {
-		AddToDoFragment fragment = new AddToDoFragment();
+	public static Settings newInstance(int sectionNumber) {
+		Settings fragment = new Settings();
 		return fragment;
 	}
 
-	public AddToDoFragment() {
+	public Settings() {
 		// Required empty public constructor
 	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setHasOptionsMenu(true);
 		db = new DatabaseManager(getActivity(), Task.DATABASE_NAME, null, 1);
 	}
 
@@ -95,89 +74,17 @@ public class AddToDoFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
-		View v = inflater
-				.inflate(R.layout.fragment_add_to_do, container, false);
-		etName = (EditText) v.findViewById(R.id.et_add_todo_name);
-		etDesc = (EditText) v.findViewById(R.id.et_add_todo_desc);
-		etTime = (EditText) v.findViewById(R.id.et_add_todo_time);
-		etDate = (EditText) v.findViewById(R.id.et_add_todo_date);
-		spDifficulty = (Spinner) v.findViewById(R.id.sp_add_todo);
-		ibNew = (ImageButton) v.findViewById(R.id.ib_add_todo_capture);
-		ibExisting = (ImageButton) v.findViewById(R.id.ib_add_todo_browse);
-		ivImage = (ImageView) v.findViewById(R.id.iv_add_todo);
+		View v = inflater.inflate(R.layout.fragment_settings, container, false);
 
-		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-				getActivity(), R.array.spinner_difficulty,
-				android.R.layout.simple_spinner_item);
-		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		spDifficulty.setAdapter(adapter);
-
-		etTime.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				final Calendar c = Calendar.getInstance();
-				int mHour = c.get(Calendar.HOUR_OF_DAY);
-				int mMinute = c.get(Calendar.MINUTE);
-
-				// Launch Time Picker Dialog
-				TimePickerDialog tpd = new TimePickerDialog(getActivity(),
-						new TimePickerDialog.OnTimeSetListener() {
-
-							@Override
-							public void onTimeSet(TimePicker view,
-									int hourOfDay, int minute) {
-								// Display Selected time in textbox
-								etTime.setText(hourOfDay
-										+ ":"
-										+ String.format("%02d%n", minute)
-												.trim());
-							}
-						}, mHour, mMinute, false);
-				tpd.show();
-			}
-		});
-
-		etDate.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				final Calendar c = Calendar.getInstance();
-				int mMonth = c.get(Calendar.MONTH);
-				int mYear = c.get(Calendar.YEAR);
-				int mDay = c.get(Calendar.DAY_OF_MONTH);
-				final String[] monthName = { "Jan", "Feb", "Mar", "Apr", "May",
-						"Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
-
-				// Launch Date Picker Dialog
-				DatePickerDialog dpd = new DatePickerDialog(getActivity(),
-						new DatePickerDialog.OnDateSetListener() {
-
-							@Override
-							public void onDateSet(DatePicker view, int year,
-									int monthOfYear, int dayOfMonth) {
-								// TODO Auto-generated method stub
-								etDate.setText(monthName[monthOfYear] + " "
-										+ dayOfMonth + ", " + year);
-								try {
-									mDate = new SimpleDateFormat("yyyy-MM-dd")
-											.parse(year + "-"
-													+ (monthOfYear + 1) + "-"
-													+ dayOfMonth);
-								} catch (ParseException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-									mDate = null;
-								}
-
-							}
-						}, mYear, mMonth, mDay);
-				dpd.show();
-
-			}
-		});
+		etName = (EditText) v.findViewById(R.id.et_settings_name);
+		ibNew = (ImageButton) v.findViewById(R.id.ib_settings_capture);
+		ibExisting = (ImageButton) v.findViewById(R.id.ib_settings_browse);
+		ivImage = (ImageView) v.findViewById(R.id.iv_settings);
+		
+		Profile p = db.getActiveProfile();
+		
+		etName.setText(p.getName());
+		ivImage.setImageBitmap(p.getImage());
 
 		ibExisting.setOnClickListener(new OnClickListener() {
 
@@ -245,7 +152,7 @@ public class AddToDoFragment extends Fragment {
 
 				}
 			};
-			((MainActivity) activity).onSectionAttached(7);
+			((MainActivity) activity).onSectionAttached(10);
 			((MainActivity) activity).restoreActionBar();
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString()
@@ -282,46 +189,37 @@ public class AddToDoFragment extends Fragment {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// TODO Auto-generated method stub
 		if (item.getItemId() == R.id.done) {
-			String name = etName.getText().toString();
-			String desc = etDesc.getText().toString();
+			Profile p = db.getActiveProfile();
+			String new_name = etName.getText().toString();
 
-			if (name.isEmpty())
-				Toast.makeText(getActivity(),
-						"Please enter a name for the task.", Toast.LENGTH_SHORT)
-						.show();
-			else if (desc.isEmpty())
-				Toast.makeText(getActivity(),
-						"Please enter a description for the task.",
+			if (new_name.isEmpty())
+				Toast.makeText(getActivity(), "Please enter a valid username.",
 						Toast.LENGTH_SHORT).show();
 			else {
-				Task newTodo = new Task(name, desc,
-						spDifficulty.getSelectedItemPosition(), mDate, etTime
-								.getText().toString(), 2, false, false, false);
-
+				p.setName(new_name);
+				
 				if (ivImage.getDrawable() != null)
-					newTodo.setImage(((BitmapDrawable) ivImage.getDrawable())
+					p.setImage(((BitmapDrawable) ivImage.getDrawable())
 							.getBitmap());
-
-				db.addTask(newTodo);
-
-				Fragment todo_fragment = CustomListFragment.newInstance(2,
-						db.getTodoList());
-				todo_fragment.setHasOptionsMenu(true);
+				
+				db.updateProfile(p);
+				
+				Fragment profile_fragment = ProfileFragment.newInstance(4);
+				profile_fragment.setHasOptionsMenu(true);
 
 				getActivity().getFragmentManager().beginTransaction()
-						.replace(R.id.container, todo_fragment).commit();
+						.replace(R.id.container, profile_fragment).commit();
 			}
 		} else if (item.getItemId() == R.id.cancel) {
-			Fragment todo_fragment = CustomListFragment.newInstance(2,
-					db.getTodoList());
-			todo_fragment.setHasOptionsMenu(true);
+			Fragment profile_fragment = ProfileFragment.newInstance(4);
+			profile_fragment.setHasOptionsMenu(true);
 
 			getActivity().getFragmentManager().beginTransaction()
-					.replace(R.id.container, todo_fragment).commit();
+					.replace(R.id.container, profile_fragment).commit();
 		}
 
 		return super.onOptionsItemSelected(item);
 	}
+
 }

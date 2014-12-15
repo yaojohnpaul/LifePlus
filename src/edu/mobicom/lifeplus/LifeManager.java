@@ -1,6 +1,7 @@
 package edu.mobicom.lifeplus;
 
 import android.content.Context;
+import android.graphics.BitmapFactory;
 
 public class LifeManager {
 
@@ -15,6 +16,7 @@ public class LifeManager {
 //			p = new Profile(android.os.Build.MODEL);
 			p = new Profile("test");
 			db.addProfile(p);
+			p.setImage(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher));
 			
 			db.addIndulgence(new Indulgence("Name", "Description", 50));
 		}

@@ -5,8 +5,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 /**
@@ -67,13 +71,15 @@ public class ProfileFragment extends Fragment {
 		TextView level = (TextView) v.findViewById(R.id.tv_level);
 		TextView EXP = (TextView) v.findViewById(R.id.tv_EXP);
 		TextView credits = (TextView) v.findViewById(R.id.tv_credits_value);
+		ImageView image = (ImageView) v.findViewById(R.id.iv_profile);
 		Profile p = db.getActiveProfile();
 		
 		if(p != null){
 			name.setText(p.getName());
 			level.setText("Level: " + String.format("%02d", p.getLevel()));
-			EXP.setText(p.getExp()/p.expForNextLevel() + "%");
+			EXP.setText(p.getExp()*100.0f/p.expForNextLevel() + "%");
 			credits.setText(p.getCredits() + "");
+			image.setImageBitmap(p.getImage());
 		}
 		
 		return v;
@@ -124,6 +130,26 @@ public class ProfileFragment extends Fragment {
 	public interface OnFragmentInteractionListener {
 		// TODO: Update argument type and name
 		public void onFragmentInteraction(Uri uri);
+	}
+	
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		// TODO Auto-generated method stub
+		super.onCreateOptionsMenu(menu, inflater);
+		inflater.inflate(R.menu.profile, menu);
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (item.getItemId() == R.id.settings) {
+			Fragment settings_fragment = Settings.newInstance(10);
+			settings_fragment.setHasOptionsMenu(true);
+
+			getActivity().getFragmentManager().beginTransaction()
+					.replace(R.id.container, settings_fragment).commit();
+		}
+		
+		return super.onOptionsItemSelected(item);
 	}
 
 }
