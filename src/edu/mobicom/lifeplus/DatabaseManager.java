@@ -44,10 +44,16 @@ public class DatabaseManager extends SQLiteOpenHelper {
 				+ Task.COLUMN_CHECKED + " boolean," 
 				+ Task.COLUMN_STATUS + " boolean)");
 
-		db.execSQL("CREATE TABLE " + Indulgence.TABLE_NAME + " ("
-				+ Task.COLUMN_ID + " integer PRIMARY KEY autoincrement,"
-				+ Indulgence.COLUMN_NAME + " text," + Indulgence.COLUMN_DESC
-				+ " text," + Indulgence.COLUMN_PRICE + " integer)");
+		db.execSQL("CREATE TABLE "+ Indulgence.TABLE_NAME + " ("
+				+ Indulgence.COLUMN_ID + " integer PRIMARY KEY autoincrement,"
+				+ Indulgence.COLUMN_NAME + " text,"
+				+ Indulgence.COLUMN_DESC + " text,"
+				+ Indulgence.COLUMN_PRICE + " integer)");
+		
+		db.execSQL("CREATE TABLE "+ Profile.TABLE_NAME + " ("
+				+ Profile.COLUMN_ID + " integer PRIMARY KEY autoincrement,"
+				+ Profile.COLUMN_EXP + " integer,"
+				+ Profile.COLUMN_CREDITS + " integer)");
 	}
 
 	@Override
@@ -91,7 +97,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
 			values.put(Task.COLUMN_STATUS, 0);
 
 		if (t.getType() == 2)
-			values.put(Task.COLUMN_DATE, t.getDate().toString());
+			if(t.getDate() != null)
+				values.put(Task.COLUMN_DATE, t.getDate().toString());
 
 		db.update(Task.TABLE_NAME, values, Task.COLUMN_ID + "= ?",
 				new String[] { String.valueOf(id) });
@@ -120,7 +127,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 		values.put(Task.COLUMN_DURATION, t.getDuration());
 		values.put(Task.COLUMN_TIME, t.getTime());
 		values.put(Task.COLUMN_DIFFICULTY, t.getDifficulty());
-		
+
 		temp = t.getImage();
 		if (temp != null) {
 			temp.compress(CompressFormat.PNG, 0, outputStream);
@@ -145,7 +152,10 @@ public class DatabaseManager extends SQLiteOpenHelper {
 			values.put(Task.COLUMN_STATUS, 0);
 
 		if (t.getType() == 2)
-			values.put(Task.COLUMN_DATE, t.getDate().toString());
+			if (t.getDate() != null)
+				values.put(Task.COLUMN_DATE, t.getDate().toString());
+			else
+				values.put(Task.COLUMN_DATE, "");
 
 		db.insert(Task.TABLE_NAME, null, values);
 		db.close();
@@ -187,7 +197,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 				String duration = c.getString(c
 						.getColumnIndex(Task.COLUMN_DURATION));
 				String time = c.getString(c.getColumnIndex(Task.COLUMN_TIME));
-				byte[] imgByte = c.getBlob(7);
+				byte[] imgByte = c.getBlob(c.getColumnIndex(Task.COLUMN_IMAGE));
 
 				int generated = c.getInt(c
 						.getColumnIndex(Task.COLUMN_GENERATED));
@@ -213,10 +223,12 @@ public class DatabaseManager extends SQLiteOpenHelper {
 				} else {
 					isFinished = false;
 				}
-				
+
 				Task t = new Task(id, name, desc, difficulty, duration, time,
 						1, isGenerated, isChecked, isFinished);
-				t.setImage(BitmapFactory.decodeByteArray(imgByte, 0, imgByte.length));
+				if (imgByte != null)
+					t.setImage(BitmapFactory.decodeByteArray(imgByte, 0,
+							imgByte.length));
 
 				daily.add(t);
 			} while (c.moveToNext());
@@ -247,6 +259,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 				String duration = c.getString(c
 						.getColumnIndex(Task.COLUMN_DURATION));
 				String time = c.getString(c.getColumnIndex(Task.COLUMN_TIME));
+				byte[] imgByte = c.getBlob(c.getColumnIndex(Task.COLUMN_IMAGE));
 
 				int checked = c.getInt(c.getColumnIndex(Task.COLUMN_CHECKED));
 				boolean isChecked;
@@ -267,16 +280,22 @@ public class DatabaseManager extends SQLiteOpenHelper {
 				Date date = null;
 
 				try {
-					date = new SimpleDateFormat("yyyyMMdd", Locale.ENGLISH)
-							.parse(c.getString(c
-									.getColumnIndex(Task.COLUMN_DATE)));
+					String tDate = c.getString(c
+							.getColumnIndex(Task.COLUMN_DATE));
+					if (!tDate.isEmpty())
+						date = new SimpleDateFormat(
+								"EEE MMM dd HH:mm:ss z yyyy").parse(tDate);
 				} catch (ParseException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-
-				todo.add(new Task(id, name, desc, difficulty, duration, date,
-						time, 2, false, isChecked, isFinished));
+				
+				Task t = new Task(id, name, desc, difficulty, date, time, 2,
+						false, isChecked, isFinished);
+				if (imgByte != null)
+					t.setImage(BitmapFactory.decodeByteArray(imgByte, 0,
+							imgByte.length));
+				todo.add(t);
 			} while (c.moveToNext());
 		}
 
@@ -296,4 +315,77 @@ public class DatabaseManager extends SQLiteOpenHelper {
 				new String[] { String.valueOf(id) });
 		db.close();
 	}
+
+	public void gainEXP(Profile p, int difficulty) {
+		SQLiteDatabase db = getWritableDatabase();
+		ContentValues values = new ContentValues();
+		p.gainExp(difficulty);
+
+		values.put(Profile.COLUMN_EXP, p.getExp());
+
+		db.update(Task.TABLE_NAME, values, Task.COLUMN_ID + "= ?",
+				new String[] { String.valueOf(p.getId()) });
+		db.close();
+	}
+
+	public void updateCredits(Profile p) {
+		SQLiteDatabase db = getWritableDatabase();
+		ContentValues values = new ContentValues();
+
+		values.put(Profile.COLUMN_CREDITS, p.getCredits());
+
+		db.update(Task.TABLE_NAME, values, Task.COLUMN_ID + "= ?",
+				new String[] { String.valueOf(p.getId()) });
+		db.close();
+	}
+
+	public void addIndulgence(Indulgence i) {
+		SQLiteDatabase db = getWritableDatabase();
+
+		ContentValues values = new ContentValues();
+
+		values.put(Indulgence.COLUMN_NAME, i.getName());
+		values.put(Indulgence.COLUMN_DESC, i.getDesc());
+		values.put(Indulgence.COLUMN_PRICE, i.getPrice());
+
+		db.insert(Task.TABLE_NAME, null, values);
+		db.close();
+	}
+
+	public void deleteIndulgence(int id) {
+		SQLiteDatabase db = getWritableDatabase();
+		db.delete(Indulgence.TABLE_NAME, Indulgence.COLUMN_ID + " =? ",
+				new String[] { String.valueOf(id) });
+		db.close();
+	}
+
+	public ArrayList<Indulgence> getIndulgenceList() {
+
+		SQLiteDatabase db = getReadableDatabase();
+		Cursor c = db.query(Indulgence.TABLE_NAME, null, null, null, null,
+				null, null);
+
+		ArrayList<Indulgence> indulge = new ArrayList<Indulgence>();
+
+		if (c.moveToFirst()) {
+			do {
+
+				int id = c.getInt(c.getColumnIndex(Task.COLUMN_ID));
+				String name = c.getString(c
+						.getColumnIndex(Indulgence.COLUMN_NAME));
+				String desc = c.getString(c
+						.getColumnIndex(Indulgence.COLUMN_DESC));
+				int price = c.getInt(c.getColumnIndex(Indulgence.COLUMN_PRICE));
+
+				indulge.add(new Indulgence(id, name, desc, price));
+
+			} while (c.moveToNext());
+		}
+
+		c.close();
+		db.close();
+
+		return indulge;
+	}
+
 }

@@ -148,14 +148,14 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:src="@drawable/ic_launcher" />
+            android:src="@drawable/ic_action_camera" />
 
         <ImageButton
             android:id="@+id/ib_add_quest_browse"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:src="@drawable/ic_launcher" />
+            android:src="@drawable/ic_action_picture" />
     </LinearLayout>
 
     <TextView

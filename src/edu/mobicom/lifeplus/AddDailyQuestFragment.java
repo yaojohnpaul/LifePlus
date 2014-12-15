@@ -52,8 +52,9 @@ public class AddDailyQuestFragment extends Fragment {
 	private ImageButton ibNew;
 	private ImageButton ibExisting;
 	private ImageView ivImage;
-	private static int RESULT_LOAD_IMAGE = 1;
-	private static final int CAMERA_REQUEST = 1888;
+	private static final int RESULT_OK = -1;
+	private static final int RESULT_LOAD_IMAGE = 1;
+	private static final int RESULT_CAMERA_REQUEST = 1888;
 
 	private OnFragmentInteractionListener mListener;
 
@@ -153,7 +154,7 @@ public class AddDailyQuestFragment extends Fragment {
 				// TODO Auto-generated method stub
 				Intent cameraIntent = new Intent(
 						android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-				startActivityForResult(cameraIntent, CAMERA_REQUEST);
+				startActivityForResult(cameraIntent, RESULT_CAMERA_REQUEST);
 			}
 		});
 
@@ -163,7 +164,7 @@ public class AddDailyQuestFragment extends Fragment {
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (requestCode == RESULT_LOAD_IMAGE && resultCode == -1
+		if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK
 				&& null != data) {
 			Uri selectedImage = data.getData();
 			String[] filePathColumn = { MediaStore.Images.Media.DATA };
@@ -174,7 +175,8 @@ public class AddDailyQuestFragment extends Fragment {
 			String picturePath = cursor.getString(columnIndex);
 			cursor.close();
 			ivImage.setImageBitmap(BitmapFactory.decodeFile(picturePath));
-		} else if (requestCode == CAMERA_REQUEST && resultCode == -1) {
+		} else if (requestCode == RESULT_CAMERA_REQUEST
+				&& resultCode == RESULT_OK) {
 			Bitmap photo = (Bitmap) data.getExtras().get("data");
 			ivImage.setImageBitmap(photo);
 		}
@@ -250,12 +252,14 @@ public class AddDailyQuestFragment extends Fragment {
 						"Please enter a description for the daily quest.",
 						Toast.LENGTH_SHORT).show();
 			else {
-
 				Task newQuest = new Task(name, desc,
 						spDifficulty.getSelectedItemPosition(), etDur.getText()
 								.toString(), etTime.getText().toString(), 1,
 						false, false, false);
-				newQuest.setImage(((BitmapDrawable)ivImage.getDrawable()).getBitmap());
+				
+				if (ivImage.getDrawable() != null)
+					newQuest.setImage(((BitmapDrawable) ivImage.getDrawable())
+							.getBitmap());
 
 				db.addTask(newQuest);
 

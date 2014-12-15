@@ -1,10 +1,12 @@
 package edu.mobicom.lifeplus;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -66,14 +68,41 @@ public class CustomAdapter extends BaseAdapter {
 				"AUG", "SEP", "OCT", "NOV", "DEC" };
 
 		time = data.get(position).getTime();
-
-		if (data.get(position).getStatus() == true)
-			vi.setBackgroundColor(Color.DKGRAY);
+		
+		if (data.get(position).getStatus() == true) {
+			vi.setBackgroundColor(Color.rgb(236, 240, 241));
+			name.setPaintFlags(name.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+		} else {
+			switch (data.get(position).getDifficulty()) {
+			case 0:
+				name.setTextColor(Color.rgb(52, 152, 219));
+				break;
+			case 1:
+				name.setTextColor(Color.rgb(26, 188, 156));
+				break;
+			case 2:
+				name.setTextColor(Color.rgb(46, 204, 113));
+				break;
+			case 3:
+				name.setTextColor(Color.rgb(241, 196, 15));
+				break;
+			case 4:
+				name.setTextColor(Color.rgb(230, 126, 34));
+				break;
+			case 5:
+				name.setTextColor(Color.rgb(231, 76, 60));
+				break;
+			}
+		}	
 
 		if (data.get(position).getDate() == null) {
-			date = data.get(position).getDuration() + " min.";
+			if(data.get(position).getType() == 1)
+				date = data.get(position).getDuration() + " min.";
+			else if (data.get(position).getType() == 2)
+				date = "";
 		} else {
-			String temp = data.get(position).getDate().toString();
+			String temp = new SimpleDateFormat("yyyyMMdd").format(data.get(
+					position).getDate());
 			date = monthName[Integer.parseInt(temp.substring(4, 6)) - 1] + " "
 					+ temp.substring(6);
 		}
