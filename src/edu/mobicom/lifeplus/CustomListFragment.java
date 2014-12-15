@@ -139,6 +139,10 @@ public class CustomListFragment extends Fragment implements
 					Toast.makeText(getActivity(),
 							"Finished tasks can no longer be edited.",
 							Toast.LENGTH_SHORT).show();
+				} else if (temp.getGenerated()) {
+					Toast.makeText(getActivity(),
+							"Generated tasks can not be edited.",
+							Toast.LENGTH_SHORT).show();
 				} else {
 					if (mSectionNumber == 1) {
 						Fragment edit_daily_quest_fragment = EditDailyQuestFragment

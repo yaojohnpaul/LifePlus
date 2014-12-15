@@ -175,11 +175,8 @@ public class Profile {
 		setLastDateGenerated(System.currentTimeMillis());
 		now.setTimeInMillis(lastDateGenerated);
 		
-		if(lastDateGenerated == 0 || cal.compareTo(now) == 1){
-			// Generate
-			
+		if(lastDateGenerated == 0 || cal.compareTo(now) == -1) 
 			return true;
-		}
 		
 		return false; // return true if update is needed, returns false if not
 		
