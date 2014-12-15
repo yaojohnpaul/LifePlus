@@ -161,7 +161,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 		db.close();
 	}
 
-	public void setAsDone(int id) {
+	public boolean setAsDone(int id) {
 		SQLiteDatabase db = getWritableDatabase();
 		ContentValues values = new ContentValues();
 
@@ -179,11 +179,14 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
 		db.close();
 		
+		boolean levelUp;
 		Profile p = getActiveProfile();
-		gainEXP(p, difficulty, type);
+		levelUp = gainEXP(p, difficulty, type);
 		
 		p = getActiveProfile();
 		gainCredits(p, difficulty);
+		
+		return levelUp;
 	}
 
 	public ArrayList<Task> getDailyQuests() {
@@ -323,16 +326,23 @@ public class DatabaseManager extends SQLiteOpenHelper {
 		db.close();
 	}
 
-	public void gainEXP(Profile p, int difficulty, int type) {
+	public boolean gainEXP(Profile p, int difficulty, int type) {
 		SQLiteDatabase db = getWritableDatabase();
 		ContentValues values = new ContentValues();
+		boolean levelUp = false;
+		int currLevel = p.getLevel();
+		
 		p.gainExp(difficulty, type);
+		if(p.getLevel() - currLevel > 0)
+			levelUp = true;
 
 		values.put(Profile.COLUMN_EXP, p.getExp());
 
 		db.update(Profile.TABLE_NAME, values, Profile.COLUMN_ID + "= ?",
 				new String[] { String.valueOf(p.getId()) });
 		db.close();
+		
+		return levelUp;
 	}
 	
 	public void gainCredits(Profile p, int difficulty) {

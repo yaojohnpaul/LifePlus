@@ -34,10 +34,10 @@ public class LifeManager {
 			db.addIndulgence(new Indulgence("I dont wanna cook :(", "Eat outside", 300));
 			db.addIndulgence(new Indulgence("Its time for the big screen", "Watch a movie", 350));
 			db.addIndulgence(new Indulgence("I need a break", "Well take a break", 80));
-			
-			p.generateQuest();
-			db.updateLastGenerated(p);
 		}
+		
+		p.generateQuest();
+		db.updateLastGenerated(p);
 		
 		return true;
 	}
