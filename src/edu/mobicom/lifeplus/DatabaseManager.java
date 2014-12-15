@@ -249,6 +249,60 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
 		return daily;
 	}
+	
+	public void resetFinishedDailyQuest() {
+
+		SQLiteDatabase db = getReadableDatabase();
+		Cursor c = db.query(Task.TABLE_NAME, null, Task.COLUMN_TYPE + " = ?",
+				new String[] { "1" }, null, null, null);
+		
+		ArrayList<Task> todo = new ArrayList<Task>();
+
+		if (c.moveToFirst()) {
+			do {
+
+				int id = c.getInt(c.getColumnIndex(Task.COLUMN_ID));
+				int status = c.getInt(c.getColumnIndex(Task.COLUMN_STATUS));
+				boolean isFinished;
+				if (status == 1) {
+					isFinished = true;
+				} else 
+					isFinished = false;
+				
+				if (isFinished){
+					ContentValues values = new ContentValues();
+					values.put(Task.COLUMN_STATUS, 0);
+					db.update(Task.TABLE_NAME, values, Task.COLUMN_ID + "= ?",
+							new String[] { String.valueOf(id) });
+				}
+			} while (c.moveToNext());
+		}
+
+		c.close();
+		db.close();
+
+	}
+	
+	public void deleteGenerated() {
+
+		SQLiteDatabase db = getReadableDatabase();
+		Cursor c = db.query(Task.TABLE_NAME, null, Task.COLUMN_GENERATED + " = ?",
+				new String[] { "1" }, null, null, null);
+		
+		ArrayList<Task> todo = new ArrayList<Task>();
+
+		if (c.moveToFirst()) {
+			do {
+				int id = c.getInt(c.getColumnIndex(Task.COLUMN_ID));
+				db.delete(Task.TABLE_NAME, Task.COLUMN_ID + " =? ",
+						new String[] { String.valueOf(id) });
+			} while (c.moveToNext());
+		}
+
+		c.close();
+		db.close();
+
+	}
 
 	public ArrayList<Task> getTodoList() {
 
