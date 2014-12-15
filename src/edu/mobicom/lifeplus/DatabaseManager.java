@@ -193,7 +193,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
 		SQLiteDatabase db = getReadableDatabase();
 		Cursor c = db.query(Task.TABLE_NAME, null, Task.COLUMN_TYPE + " = ?",
-				new String[] { "1" }, null, null, null);
+				new String[] { "1" }, null, null, Task.COLUMN_STATUS + " ASC, " + Task.COLUMN_DIFFICULTY + " ASC, " + Task.COLUMN_TIME + " ASC");
 
 		ArrayList<Task> daily = new ArrayList<Task>();
 
@@ -308,7 +308,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
 		SQLiteDatabase db = getReadableDatabase();
 		Cursor c = db.query(Task.TABLE_NAME, null, Task.COLUMN_TYPE + " = ?",
-				new String[] { "2" }, null, null, null);
+				new String[] { "2" }, null, null, Task.COLUMN_STATUS + " ASC, " + Task.COLUMN_DIFFICULTY + " ASC, " + Task.COLUMN_DATE + " ASC, " + Task.COLUMN_TIME + " ASC");
 
 		ArrayList<Task> todo = new ArrayList<Task>();
 
@@ -464,7 +464,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 	public ArrayList<Indulgence> getIndulgenceList() {
 		SQLiteDatabase db = getReadableDatabase();
 		Cursor c = db.query(Indulgence.TABLE_NAME, null, null, null, null,
-				null, null);
+				null, Indulgence.COLUMN_PRICE + " ASC");
 
 		ArrayList<Indulgence> indulge = new ArrayList<Indulgence>();
 
