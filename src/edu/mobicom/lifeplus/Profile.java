@@ -1,5 +1,6 @@
 package edu.mobicom.lifeplus;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import android.graphics.Bitmap;
@@ -22,7 +23,7 @@ public class Profile {
 	private int exp;
 	private boolean active;
 	private Bitmap image;
-	private Date lastDateGenerated;
+	private long lastDateGenerated;
 
 	public Profile(String name) {
 		this.name = name;
@@ -65,24 +66,24 @@ public class Profile {
 	public void gainExp(int difficulty, int type) {
 		int temp = 0;
 
-		switch (difficulty) {
+		switch(difficulty) {
 		case 0:
 			temp = 10;
 			break;
 		case 1:
-			temp = 25;
+			temp = 30;
 			break;
 		case 2:
-			temp = 40;
+			temp = 45;
 			break;
 		case 3:
-			temp = 70;
+			temp = 75;
 			break;
 		case 4:
-			temp = 110;
+			temp = 150;
 			break;
 		case 5:
-			temp = 150;
+			temp = 240;
 			break;
 		}
 
@@ -150,5 +151,38 @@ public class Profile {
 	public Bitmap getImage() {
 		return image;
 	}
+	
+	public void setLastDateGenerated(long lastDateGenerated) {
+		this.lastDateGenerated = lastDateGenerated;
+	}
+	
+	public long getLastDateGenerated() {
+		return lastDateGenerated;
+	}
 
+	public boolean generateQuest() {
+		Calendar cal = Calendar.getInstance();
+		
+		if(lastDateGenerated != 0)
+			cal.setTimeInMillis(lastDateGenerated);
+		
+		cal.add(Calendar.DAY_OF_YEAR, 1); 
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		
+		Calendar now = Calendar.getInstance();
+		setLastDateGenerated(System.currentTimeMillis());
+		now.setTimeInMillis(lastDateGenerated);
+		
+		if(lastDateGenerated == 0 || cal.compareTo(now) == 1){
+			// Generate
+			
+			return true;
+		}
+		
+		return false; // return true if update is needed, returns false if not
+		
+	}
+	
 }

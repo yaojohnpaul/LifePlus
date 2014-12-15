@@ -70,5 +70,13 @@
             android:layout_weight="1"
             android:src="@drawable/ic_action_picture" />
     </LinearLayout>
+    
+    <Button
+        android:id="@+id/bt_settings_delete"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Delete Database"
+        android:textColor="#ecf0f1"
+        android:background="#c0392b" />
 
 </LinearLayout>

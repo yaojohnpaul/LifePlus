@@ -56,7 +56,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
 				+ Profile.COLUMN_EXP + " integer,"
 				+ Profile.COLUMN_CREDITS + " integer,"
 				+ Profile.COLUMN_ACTIVE + " boolean,"
-				+ Profile.COLUMN_IMAGE + " blob)");
+				+ Profile.COLUMN_IMAGE + " blob,"
+				+ Profile.COLUMN_GENERATED + " long)");
 	}
 
 	@Override
@@ -440,6 +441,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 				int credits = c.getInt(c.getColumnIndex(Profile.COLUMN_CREDITS));
 				int active = c.getInt(c.getColumnIndex(Profile.COLUMN_ACTIVE));
 				byte[] imgByte = c.getBlob(c.getColumnIndex(Profile.COLUMN_IMAGE));
+				long lastDateGenerated = c.getLong(c.getColumnIndex(Profile.COLUMN_GENERATED));
 				
 				boolean isActive;
 				if (active == 1) {
@@ -453,6 +455,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 					if (imgByte != null)
 						p.setImage(BitmapFactory.decodeByteArray(imgByte, 0,
 								imgByte.length));
+					p.setLastDateGenerated(lastDateGenerated);
 				}
 			} while (c.moveToNext());
 		}
@@ -496,6 +499,17 @@ public class DatabaseManager extends SQLiteOpenHelper {
 	public void deleteProfile() {
 		SQLiteDatabase db = getWritableDatabase();
 		db.delete(Profile.TABLE_NAME, null, null);
+		db.close();
+	}
+	
+	public void updateLastGenerated(Profile p) {
+		SQLiteDatabase db = getWritableDatabase();
+		ContentValues values = new ContentValues();
+
+		values.put(Profile.COLUMN_GENERATED, p.getLastDateGenerated());
+
+		db.update(Profile.TABLE_NAME, values, Profile.COLUMN_ID + "= ?",
+				new String[] { String.valueOf(p.getId()) });
 		db.close();
 	}
 

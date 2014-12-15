@@ -6,6 +6,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.app.Fragment;
+import android.app.AlertDialog.Builder;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -18,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -80,9 +83,9 @@ public class Settings extends Fragment {
 		ibNew = (ImageButton) v.findViewById(R.id.ib_settings_capture);
 		ibExisting = (ImageButton) v.findViewById(R.id.ib_settings_browse);
 		ivImage = (ImageView) v.findViewById(R.id.iv_settings);
-		
+
 		Profile p = db.getActiveProfile();
-		
+
 		etName.setText(p.getName());
 		ivImage.setImageBitmap(p.getImage());
 
@@ -106,6 +109,43 @@ public class Settings extends Fragment {
 				Intent cameraIntent = new Intent(
 						android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
 				startActivityForResult(cameraIntent, RESULT_CAMERA_REQUEST);
+			}
+		});
+
+		Button btDelete = (Button) v.findViewById(R.id.bt_settings_delete);
+		btDelete.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Builder builder = new Builder(getActivity());
+				builder.setTitle("Delete database");
+				builder.setMessage("WARNING! All your data will be erased. The application will close if you continue.");
+
+				builder.setPositiveButton("Yes",
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								getActivity()
+										.deleteDatabase(Task.DATABASE_NAME);
+								getActivity().finish();
+							}
+
+						});
+
+				builder.setNegativeButton("No",
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+							}
+
+						});
+
+				builder.setIcon(android.R.drawable.ic_dialog_alert);
+				builder.create().show();
 			}
 		});
 
@@ -198,13 +238,13 @@ public class Settings extends Fragment {
 						Toast.LENGTH_SHORT).show();
 			else {
 				p.setName(new_name);
-				
+
 				if (ivImage.getDrawable() != null)
 					p.setImage(((BitmapDrawable) ivImage.getDrawable())
 							.getBitmap());
-				
+
 				db.updateProfile(p);
-				
+
 				Fragment profile_fragment = ProfileFragment.newInstance(4);
 				profile_fragment.setHasOptionsMenu(true);
 
